@@ -46,7 +46,8 @@ function ln_upsert_page( $slug, $title, $content ) {
 			)
 		);
 		if ( $id && ! is_wp_error( $id ) ) {
-			update_post_meta( $id, '_ln_hash', md5( $content ) );
+			ln_store_hash( $id );
+			update_post_meta( $id, '_ln_source', md5( $content ) );
 		}
 		return $id;
 	}
@@ -57,22 +58,43 @@ function ln_upsert_page( $slug, $title, $content ) {
 		// Pages from theme 1.0 have no hash: treat them as untouched if never modified.
 		: $existing->post_modified_gmt === $existing->post_date_gmt;
 
-	if ( $untouched && md5( $content ) !== $hash ) {
+	if ( $untouched && md5( $content ) !== get_post_meta( $existing->ID, '_ln_source', true ) ) {
 		wp_update_post(
 			array(
 				'ID'           => $existing->ID,
 				'post_content' => wp_slash( $content ),
 			)
 		);
-		update_post_meta( $existing->ID, '_ln_hash', md5( $content ) );
+		ln_store_hash( $existing->ID );
+		update_post_meta( $existing->ID, '_ln_source', md5( $content ) );
 	}
-	if ( 'publish' !== $existing->post_status && 'trash' !== $existing->post_status ) {
-		wp_update_post( array( 'ID' => $existing->ID, 'post_status' => 'publish' ) );
-	}
+	// Never change a page's status here: if someone unpublished it, that stays.
 	return $existing->ID;
 }
 
+/**
+ * Fingerprint the page exactly as WordPress saved it, so "untouched" checks
+ * compare like with like.
+ */
+function ln_store_hash( $id ) {
+	clean_post_cache( $id );
+	update_post_meta( $id, '_ln_hash', md5( get_post_field( 'post_content', $id, 'raw' ) ) );
+}
+
 function ln_setup_pages() {
+	// Setup can run during a visitor's page load; save theme pages without the
+	// visitor-level HTML filter so the blocks are stored exactly as written.
+	$kses = has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+	if ( $kses ) {
+		kses_remove_filters();
+	}
+	ln_setup_pages_inner();
+	if ( $kses ) {
+		kses_init_filters();
+	}
+}
+
+function ln_setup_pages_inner() {
 	if ( ! get_option( 'ln_pages_done' ) ) {
 		update_option( 'blogname', 'Namitha Raveendranathan' );
 		update_option( 'blogdescription', 'Designer & digital artist · Love, N' );

@@ -106,7 +106,7 @@ function ln_page_work() {
 	$hero = ln_section(
 		ln_p( 'Portfolio', 'ln-kicker' )
 		. ln_heading( 'Selected <em class="ln-accent">works</em>', 1 )
-		. ln_p( 'Artworks, animation and branding projects, for clients and for the love of it. Tap any image to see it full size.', 'ln-lede' )
+		. ln_p( 'Artworks, animation and branding projects, for clients and for the love of it.', 'ln-lede' )
 		. ln_buttons(
 			array(
 				array( 'Artworks', '#artworks', true ),
@@ -126,7 +126,7 @@ function ln_page_work() {
 	};
 
 	$artworks = ln_section(
-		$head( 'Artworks', 'Editorial pieces, book covers, personal series and everything in between: soft colour, small details and a lot of heart.' )
+		$head( 'Artworks', 'Personal series, editorial pieces, book covers and everything in between.' )
 		. ln_gallery(
 			array(
 				array( 'illustration-1.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
@@ -141,7 +141,7 @@ function ln_page_work() {
 	);
 
 	$animation = ln_section(
-		$head( 'Animation', 'Looping moments, explainer films and little moving stories that make people smile.' )
+		$head( 'Animation', 'Looping moments and little moving stories.' )
 		. ln_gallery(
 			array(
 				array( 'animation-1.jpg', '[Describe this animation still]', '[Film title] · [Client]' ),
