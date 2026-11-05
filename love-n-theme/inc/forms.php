@@ -316,7 +316,7 @@ add_shortcode(
 
 /* ---------- [ln_mail_club_plans] ----------
  * Product-style picker: photo, title, price, "Delivering to" switch
- * (India / Outside India), plan pills and one "Join" button.
+ * (India / International), plan pills and one "Join" button.
  * Each plan is a simple product in the "Art Mail Club" category with a
  * _ln_region meta of "india" (default) or "international"; the button adds
  * the chosen one to the cart and goes straight to checkout.
@@ -351,7 +351,7 @@ add_shortcode(
 
 		$regions = array(
 			'india'         => array( 'label' => 'India', 'plans' => array() ),
-			'international' => array( 'label' => 'Outside India', 'plans' => array() ),
+			'international' => array( 'label' => 'International', 'plans' => array() ),
 		);
 		foreach ( $products as $p ) {
 			$regions[ ln_club_region( $p ) ]['plans'][] = $p;
@@ -460,7 +460,7 @@ function ln_club_region_error( $country, $items ) {
 		}
 		$region = ln_club_region( $product );
 		if ( 'india' === $region && 'IN' !== $country ) {
-			return __( 'The Mail Club plan in your basket is for delivery within India. For an address outside India, please go back to the Mail Club page and choose “Outside India”.', 'love-n' );
+			return __( 'The Mail Club plan in your basket is for delivery within India. For an address outside India, please go back to the Mail Club page and choose “International”.', 'love-n' );
 		}
 		if ( 'international' === $region && 'IN' === $country ) {
 			return __( 'The Mail Club plan in your basket is for delivery outside India. For an Indian address, please go back to the Mail Club page and choose “India”.', 'love-n' );
