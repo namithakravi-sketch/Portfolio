@@ -14,8 +14,7 @@ function ln_page_home() {
 	$hero = ln_cover_video(
 		'hero.mp4',
 		ln_p( 'Designer &amp; digital artist', 'ln-kicker' )
-		. ln_heading( 'Little artworks for <em class="ln-accent">big</em> feelings', 1 )
-		. ln_p( 'Illustration, animation and branding by Namitha Raveendranathan, plus the Love, N collection of prints and paper goods.', 'ln-lede' )
+		. ln_heading( 'Finding <em class="ln-accent">magic</em> in the ordinary, one colour at a time', 1 )
 		. ln_buttons( array( array( 'View works', '/work/' ), array( 'Visit the shop', '/shop/', true ) ) ),
 		'ln-hero'
 	);
