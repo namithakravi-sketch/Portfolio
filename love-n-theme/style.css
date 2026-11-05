@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.7.3
+Version: 1.7.5
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -363,6 +363,11 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .ln-club-product { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
 @media (max-width: 860px) { .ln-club-product { grid-template-columns: 1fr; } }
 .ln-club-product__media img { width: 100%; border-radius: var(--ln-radius); aspect-ratio: 1; object-fit: cover; display: block; }
+@media (min-width: 861px) {
+	/* photos stay in view beside the letter while scrolling (below the sticky header) */
+	.ln-club-product__media { position: sticky; top: 160px; align-self: start; }
+}
+.ln-club-product__thumbs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.4vw, 16px); margin-top: clamp(10px, 1.4vw, 16px); }
 .ln-club-product__title { font-family: var(--wp--preset--font-family--heading); font-size: clamp(2.2rem, 4.5vw, 3.4rem); line-height: 1.1; margin: 0 0 1rem; }
 .ln-club-product__price { font-size: 1.35rem; letter-spacing: 0.05em; margin: 0; }
 .ln-club-product__small { font-size: 0.92rem; opacity: 0.8; margin: 0.35rem 0 0; }
@@ -404,38 +409,33 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .ln-club-about { margin-top: 2.5rem; }
 .ln-letter {
 	position: relative;
-	background:
-		repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.75em - 1px), rgba(46, 43, 39, 0.07) calc(1.75em - 1px), rgba(46, 43, 39, 0.07) 1.75em),
-		var(--ln-cream);
-	border: 1px solid var(--ln-line);
+	background: transparent;
+	border: 1px solid var(--ln-ink);
 	border-radius: 4px;
-	box-shadow: 0 14px 30px rgba(46, 43, 39, 0.08);
-	padding: 2.2rem 2rem 1.6rem;
+	padding: 2.2rem 2rem 1.4rem;
 	line-height: 1.75;
 	transform: rotate(-0.6deg);
 }
 .ln-letter p { margin: 0 0 1em; }
 .ln-letter__dear { font-family: var(--wp--preset--font-family--accent); font-style: italic; font-size: 1.6rem; line-height: 1.2; margin-bottom: 0.6em !important; }
-.ln-letter__sign { font-family: var(--wp--preset--font-family--heading); font-size: 1.6rem; text-align: right; margin: 0.4em 0 0 !important; }
-.ln-letter__sign em { font-family: var(--wp--preset--font-family--accent); font-style: italic; font-size: 1.2em; color: var(--ln-terracotta); }
+.ln-letter__sign { text-align: right; margin: 0.6em 0 0 !important; }
+.ln-letter__sign img { width: min(220px, 60%); height: auto; display: inline-block; }
 .ln-letter__stamp {
 	position: absolute;
 	top: -14px;
 	right: 18px;
-	width: 64px;
-	height: 74px;
+	width: 62px;
+	height: 72px;
 	display: grid;
 	place-items: center;
 	align-content: center;
 	gap: 2px;
-	/* perforated edge: holes painted only in the border ring */
-	border: 6px solid transparent;
-	background:
-		linear-gradient(var(--ln-rose), var(--ln-rose)) padding-box,
-		radial-gradient(circle, var(--ln-cream) 2.6px, var(--ln-rose) 3px) -4px -4px / 8px 8px border-box;
-	color: var(--ln-terracotta);
+	background: var(--ln-blush);
+	border: 1px dashed var(--ln-ink);
+	outline: 1px solid var(--ln-ink);
+	outline-offset: 3px;
+	color: var(--ln-ink);
 	transform: rotate(6deg);
-	box-shadow: 0 3px 8px rgba(46, 43, 39, 0.12);
 }
 .ln-letter__stamp span { font-size: 1.6rem; line-height: 1; }
 .ln-letter__stamp small { font-family: var(--wp--preset--font-family--heading); font-size: 0.7rem; color: var(--ln-ink); }
@@ -458,17 +458,17 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .ln-journey__steps li { position: relative; text-align: center; display: grid; justify-items: center; gap: 0.25rem; font-size: 0.92rem; }
 .ln-journey__steps strong { font-family: var(--wp--preset--font-family--heading); font-weight: 400; font-size: 1.05rem; margin-top: 0.4rem; }
 .ln-journey__steps span:not(.ln-journey__icon) { opacity: 0.8; line-height: 1.4; }
-.ln-journey__icon { width: 58px; height: 58px; border-radius: 50%; background: var(--ln-blush); border: 1px solid var(--ln-line); display: grid; place-items: center; position: relative; z-index: 1; }
+.ln-journey__icon { width: 58px; height: 58px; border-radius: 50%; background: var(--ln-blush); border: 1px solid var(--ln-ink); display: grid; place-items: center; position: relative; z-index: 1; }
 .ln-journey__icon svg { width: 30px; height: 30px; fill: none; stroke: var(--ln-ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 .ln-stamps { list-style: none; padding: 0; margin: 1.8rem 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .ln-stamp {
-	--stamp: var(--ln-rose);
-	/* perforated edge: holes (page colour) painted only in the border ring */
-	border: 8px solid transparent;
-	background:
-		linear-gradient(var(--stamp), var(--stamp)) padding-box,
-		radial-gradient(circle, var(--ln-blush) 3.2px, var(--stamp) 3.7px) -5px -5px / 10px 10px border-box;
+	/* outline-only postage stamp: dashed perforation line inside a solid frame */
+	border: 1px dashed var(--ln-ink);
+	outline: 1px solid var(--ln-ink);
+	outline-offset: 4px;
+	background: transparent;
+	margin: 5px;
 	padding: 0.8rem 0.9rem 0.75rem;
 	display: grid;
 	gap: 0.25rem;
@@ -480,10 +480,6 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .ln-stamp:nth-child(even) { transform: rotate(1deg); }
 .ln-stamp:hover { transform: rotate(0) translateY(-2px); }
 .ln-stamp strong { font-family: var(--wp--preset--font-family--heading); font-weight: 400; font-size: 1.05rem; }
-.ln-stamp--rose { --stamp: #F3DDD7; }
-.ln-stamp--sage { --stamp: #E3EAD9; }
-.ln-stamp--butter { --stamp: #FBEBC0; }
-.ln-stamp--sky { --stamp: #DCE7EE; }
 .ln-journey__note { font-size: 0.85rem; opacity: 0.7; margin: 1rem 0 0 !important; }
 @media (max-width: 480px) {
 	.ln-letter { padding: 2rem 1.3rem 1.4rem; transform: none; }

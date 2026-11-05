@@ -77,7 +77,7 @@ add_action(
 
 function ln_export_page() {
 	$url = wp_nonce_url( admin_url( 'admin-post.php?action=ln_export' ), 'ln_export' );
-	echo '<div class="wrap"><h1>Export subscribers</h1><p>Download every email sign-up (newsletter and Mail Club waitlist) as a CSV file you can import into your email tool.</p>';
+	echo '<div class="wrap"><h1>Export subscribers</h1><p>Download every email sign-up (newsletter and Mail Club mail list) as a CSV file you can import into your email tool.</p>';
 	echo '<p><a class="button button-primary" href="' . esc_url( $url ) . '">Download CSV</a></p></div>';
 }
 
@@ -180,7 +180,7 @@ add_action(
 				}
 				wp_mail(
 					get_option( 'admin_email' ),
-					'mail-club' === $src ? 'New Mail Club waitlist sign-up' : 'New email sign-up',
+					'mail-club' === $src ? 'New Mail Club mail list sign-up' : 'New email sign-up',
 					sprintf( "%s%s signed up from: %s\n\nSee all sign-ups: %s", $email, $name ? " ({$name})" : '', $src, admin_url( 'edit.php?post_type=ln_subscriber' ) )
 				);
 			}
@@ -237,7 +237,7 @@ add_shortcode(
 		if ( isset( $_GET['ln_signup'], $_GET['ln_src'] ) && sanitize_key( $_GET['ln_src'] ) === $src ) {
 			$state = sanitize_key( $_GET['ln_signup'] );
 			$map   = array(
-				'ok'        => array( 'ok', 'mail-club' === $src ? 'You’re on the list! I’ll email you as soon as the next Mail Club spots open.' : 'Thank you! You’re signed up. Look out for some colour in your inbox.' ),
+				'ok'        => array( 'ok', 'mail-club' === $src ? 'You’re on the Mail Club mail list! I’ll email you when new club themes are on their way.' : 'Thank you! You’re signed up. Look out for some colour in your inbox.' ),
 				'bad_email' => array( 'err', 'That email address doesn’t look quite right. Could you check it?' ),
 				'consent'   => array( 'err', 'Please tick the box so I know it’s OK to email you.' ),
 				'expired'   => array( 'err', 'The form timed out. Please try again.' ),
@@ -257,7 +257,7 @@ add_shortcode(
 				<?php endif; ?>
 				<label>Email address<input type="email" name="ln_email" required autocomplete="email" placeholder="you@example.com"></label>
 				<button class="wp-element-button" type="submit"><?php echo esc_html( $a['button'] ); ?></button>
-				<label class="ln-check"><input type="checkbox" name="ln_consent" value="1" required> <span>Yes, email me <?php echo 'mail-club' === $src ? 'when Mail Club spots open' : 'new art and shop news'; ?>. I can unsubscribe any time.</span></label>
+				<label class="ln-check"><input type="checkbox" name="ln_consent" value="1" required> <span>Yes, email me <?php echo 'mail-club' === $src ? 'about new club themes' : 'new art and shop news'; ?>. I can unsubscribe any time.</span></label>
 				<input type="hidden" name="ln_form" value="signup">
 				<input type="hidden" name="ln_source" value="<?php echo esc_attr( $src ); ?>">
 				<?php wp_nonce_field( 'ln_signup', '_ln_nonce', false ); ?>
@@ -331,7 +331,12 @@ add_shortcode(
 	function () {
 		$img   = esc_url( ln_img_url( 'shop-mail-club.jpg' ) );
 		$title = 'Love, N Art Mail Club 💌';
-		$media = '<div class="ln-club-product__media"><img src="' . $img . '" alt="What arrives in a Love, N Art Mail Club envelope"></div>';
+		// Main photo plus a 2×2 grid of extra photos (envelope contents) beneath it.
+		$thumbs = '';
+		foreach ( array( 'shop-prints.jpg' => 'An art print from the club', 'shop-postcards.jpg' => 'Club postcards', 'shop-stickers.jpg' => 'Club stickers', 'shop-bookmarks.jpg' => 'A club bookmark' ) as $file => $alt ) {
+			$thumbs .= '<img src="' . esc_url( ln_img_url( $file ) ) . '" alt="' . esc_attr( $alt ) . '" loading="lazy">';
+		}
+		$media = '<div class="ln-club-product__media"><img src="' . $img . '" alt="What arrives in a Love, N Art Mail Club envelope"><div class="ln-club-product__thumbs">' . $thumbs . '</div></div>';
 
 		$products = class_exists( 'WooCommerce' ) ? wc_get_products(
 			array(
@@ -346,7 +351,7 @@ add_shortcode(
 
 		if ( ! $products ) {
 			return '<div class="ln-club-product">' . $media . '<div><h1 class="ln-club-product__title">' . esc_html( $title ) . '</h1>'
-				. '<p class="ln-plans-empty">New club spots are coming soon. Join the waitlist below and you’ll be the first to know.</p></div></div>';
+				. '<p class="ln-plans-empty">New club plans are coming soon. Join the mail list below and you’ll be the first to know.</p></div></div>';
 		}
 
 		$regions = array(
@@ -425,7 +430,7 @@ add_shortcode(
 						<p class="ln-letter__dear">Dear friend,</p>
 						<p>Somewhere between endless scrolling and notifications, I started missing the simple joy of real post: an envelope with your name on it, something you can hold, keep and pin to a wall. So I made a little club for it.</p>
 						<p>Every month I pack an envelope just for you, filled with original artworks, postcards, stickers and paper goodies, all illustrated and hand-packed by me in my studio, along with a little note about what I’ve been making, learning and dreaming up.</p>
-						<p class="ln-letter__sign">Love, <em>N</em></p>
+						<p class="ln-letter__sign"><img src="<?php echo esc_url( ln_img_url( 'love-n-signature.png' ) ); ?>" alt="Love, N" width="900" height="199"></p>
 					</article>
 
 					<p class="ln-cutoff"><span aria-hidden="true">✉</span> Subscribe by the last day of the month to catch the next month’s mailing.</p>

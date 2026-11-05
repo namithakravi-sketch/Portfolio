@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOVE_N_VERSION', '1.7.3' );
+define( 'LOVE_N_VERSION', '1.7.5' );
 
 require_once get_theme_file_path( 'inc/blocks.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
@@ -81,7 +81,7 @@ add_filter(
 	'render_block_core/group',
 	function ( $html, $block ) {
 		$class = $block['attrs']['className'] ?? '';
-		if ( false !== strpos( $class, 'ln-signup-band' ) && is_page( array( 'work' ) ) ) {
+		if ( false !== strpos( $class, 'ln-signup-band' ) && is_page( array( 'work', 'mail-club' ) ) ) {
 			return '';
 		}
 		return $html;

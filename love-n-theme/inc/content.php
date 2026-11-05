@@ -278,8 +278,8 @@ function ln_page_mail_club() {
 	$wait = ln_section(
 		ln_columns(
 			array(
-				ln_heading( 'Not ready yet? <em class="ln-accent">Join the waitlist.</em>' ) . ln_p( 'Leave your email and I’ll let you know when new club themes and spots open.' ),
-				ln_shortcode( '[ln_signup source="mail-club" button="Join the waitlist"]' ),
+				ln_heading( 'Not ready yet? <em class="ln-accent">Join the mail list.</em>' ) . ln_p( 'Leave your email and I’ll let you know about new club themes.' ),
+				ln_shortcode( '[ln_signup source="mail-club" button="Join the mail list"]' ),
 			),
 			'',
 			'center'
