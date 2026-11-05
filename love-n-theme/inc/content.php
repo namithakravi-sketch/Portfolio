@@ -47,8 +47,7 @@ function ln_page_home() {
 			ln_photo_card( 'shop-prints.jpg', 'Love, N art prints', 'Artworks &amp; prints', '/product-category/prints/', 'ln-tile ln-tile--big' )
 			. ln_photo_card( 'shop-postcards.jpg', 'Love, N postcards', 'Postcards', '/product-category/postcards/', 'ln-tile' )
 			. ln_photo_card( 'shop-bookmarks.jpg', 'Love, N bookmarks', 'Bookmarks', '/product-category/bookmarks/', 'ln-tile' )
-			. ln_photo_card( 'shop-stickers.jpg', 'Love, N stickers', 'Stickers', '/product-category/stickers/', 'ln-tile ln-tile--half' )
-			. ln_photo_card( 'shop-mail-club.jpg', 'Love, N Art Mail Club', 'Art Mail Club', '/mail-club/', 'ln-tile ln-tile--half' ),
+			. ln_photo_card( 'shop-stickers.jpg', 'Love, N stickers', 'Stickers', '/product-category/stickers/', 'ln-tile' ),
 			'ln-grid'
 		)
 		. ln_group( ln_buttons( array( array( 'Shop everything', '/shop/', true ) ) ), 'ln-center' )
