@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOVE_N_VERSION', '1.7.5' );
+define( 'LOVE_N_VERSION', '1.7.10' );
 
 require_once get_theme_file_path( 'inc/blocks.php' );
 require_once get_theme_file_path( 'inc/forms.php' );

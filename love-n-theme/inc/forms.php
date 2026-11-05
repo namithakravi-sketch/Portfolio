@@ -426,14 +426,19 @@ add_shortcode(
 
 				<div class="ln-club-about">
 					<article class="ln-letter" aria-label="A note from Namitha">
-						<span class="ln-letter__stamp" aria-hidden="true"><span>✿</span><small>Love, N</small></span>
+						<span class="ln-letter__stamp" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+							<path class="ln-stamp-edge" d="M14 10h60v70H14z" stroke-width="1.4" stroke-dasharray="2.2 3.2"/>
+							<rect x="19" y="15" width="50" height="60" stroke-width="1.2"/>
+							<g stroke-width="1.4"><circle cx="44" cy="40" r="4"/><path d="M44 36c-2-6 6-8 5-2M48 40c6-2 8 6 2 5M44 44c2 6-6 8-5 2M40 40c-6 2-8-6-2-5M44 47v16M44 56c-4-1-7-4-8-7M44 59c4-1 6-3 7-6"/></g>
+							<g stroke-width="1.2" opacity=".75"><circle cx="70" cy="66" r="15"/><circle cx="70" cy="66" r="11"/><path d="M45 80c5-4 10 4 15 0s10 4 15 0 10 4 15 0M47 87c5-4 10 4 15 0s10 4 15 0 10 4 15 0"/></g>
+						</svg></span>
 						<p class="ln-letter__dear">Dear friend,</p>
 						<p>Somewhere between endless scrolling and notifications, I started missing the simple joy of real post: an envelope with your name on it, something you can hold, keep and pin to a wall. So I made a little club for it.</p>
 						<p>Every month I pack an envelope just for you, filled with original artworks, postcards, stickers and paper goodies, all illustrated and hand-packed by me in my studio, along with a little note about what I’ve been making, learning and dreaming up.</p>
 						<p class="ln-letter__sign"><img src="<?php echo esc_url( ln_img_url( 'love-n-signature.png' ) ); ?>" alt="Love, N" width="900" height="199"></p>
 					</article>
 
-					<p class="ln-cutoff"><span aria-hidden="true">✉</span> Subscribe by the last day of the month to catch the next month’s mailing.</p>
+					<p class="ln-cutoff"><svg class="ln-cutoff__icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg> Subscribe by the last day of the month to catch the next month’s mailing.</p>
 
 					<section class="ln-journey" aria-labelledby="ln-journey-title">
 						<h3 id="ln-journey-title" class="ln-journey__title">How your envelope travels</h3>
@@ -494,6 +499,42 @@ add_shortcode(
 					qty.value = Math.min(10, Math.max(1, v + parseInt(b.dataset.step, 10)));
 				});
 			});
+			// Add to cart without leaving the page, then open the cart drawer.
+			var addBtn = f.querySelector('.ln-btn-outline');
+			if (addBtn && window.fetch) {
+				addBtn.addEventListener('click', function (e) {
+					var mini = document.querySelector('.wc-block-mini-cart');
+					var pick = f.querySelector('input[name="add-to-cart"]:checked');
+					if (!mini || !pick) return; // no drawer available: fall back to the cart page
+					e.preventDefault();
+					var label = addBtn.textContent;
+					addBtn.disabled = true;
+					addBtn.textContent = 'Adding…';
+					var qtyVal = Math.max(1, parseInt(qty.value, 10) || 1);
+					fetch('/wp-json/wc/store/v1/cart', { credentials: 'same-origin' })
+						.then(function (r) { return r.headers.get('Nonce'); })
+						.then(function (nonce) {
+							return fetch('/wp-json/wc/store/v1/cart/add-item', {
+								method: 'POST',
+								credentials: 'same-origin',
+								headers: { 'Content-Type': 'application/json', 'Nonce': nonce },
+								body: JSON.stringify({ id: parseInt(pick.value, 10), quantity: qtyVal })
+							});
+						})
+						.then(function (r) { if (!r.ok) throw new Error('add failed'); return r.json(); })
+						.then(function () {
+							document.body.dispatchEvent(new CustomEvent('wc-blocks_added_to_cart', { bubbles: true, cancelable: true }));
+							addBtn.textContent = 'Added ✓';
+							setTimeout(function () { addBtn.textContent = label; addBtn.disabled = false; }, 1600);
+						})
+						.catch(function () {
+							addBtn.disabled = false;
+							addBtn.textContent = label;
+							f.action = addBtn.getAttribute('formaction');
+							f.submit();
+						});
+				});
+			}
 			f.addEventListener('change', function (e) {
 				var r = e.target;
 				if (r.name === 'ln_region') setRegion(r.value);
