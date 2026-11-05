@@ -13,18 +13,30 @@
 		if (!ab) return 0;
 		return getComputedStyle(ab).position === 'fixed' ? ab.offsetHeight : 0;
 	}
+	// Height of the announcement bars above the menu row. Measured from the bars
+	// themselves, so it stays correct while the header is pinned (iPad Safari
+	// fires resize events mid-scroll as its toolbar shows and hides).
+	function barsHeight() {
+		var h = 0;
+		for (var el = header.firstElementChild; el && el !== bar; el = el.nextElementSibling) {
+			var cs = getComputedStyle(el);
+			h += el.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom);
+		}
+		return Math.round(h);
+	}
 	function place() {
 		if (!header || !bar) return;
-		var barsHeight = bar.offsetTop - header.offsetTop; // height of the bars above the menu row
-		header.style.top = (adminBarOffset() - barsHeight) + 'px';
-		root.classList.toggle('ln-stuck', window.scrollY > barsHeight + 4);
+		var bh = barsHeight();
+		header.style.top = (adminBarOffset() - bh) + 'px';
+		root.classList.toggle('ln-stuck', window.scrollY > bh + 4);
 	}
 	if (header && bar) {
 		place();
 		window.addEventListener('resize', place);
+		var bhCache = barsHeight();
+		window.addEventListener('resize', function () { bhCache = barsHeight(); });
 		window.addEventListener('scroll', function () {
-			var barsHeight = bar.offsetTop - header.offsetTop;
-			root.classList.toggle('ln-stuck', window.scrollY > barsHeight + 4);
+			root.classList.toggle('ln-stuck', window.scrollY > bhCache + 4);
 		}, { passive: true });
 		window.addEventListener('load', place);
 	}
