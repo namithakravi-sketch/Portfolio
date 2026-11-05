@@ -253,12 +253,10 @@ function ln_page_mail_club() {
 			array(
 				ln_p( 'In every envelope', 'ln-kicker' ) . ln_heading( 'What’s <em class="ln-accent">inside</em>' ),
 				"<!-- wp:list {\"className\":\"ln-ticks\"} -->\n<ul class=\"wp-block-list ln-ticks\">"
-				. "<!-- wp:list-item -->\n<li>An exclusive art print you won’t find in the shop</li>\n<!-- /wp:list-item -->\n\n"
-				. "<!-- wp:list-item -->\n<li>A sticker or two, made to match the month’s theme</li>\n<!-- /wp:list-item -->\n\n"
-				. "<!-- wp:list-item -->\n<li>A postcard or bookmark to keep or send on</li>\n<!-- /wp:list-item -->\n\n"
-				. "<!-- wp:list-item -->\n<li>A handwritten note and a peek at what’s next in the studio</li>\n<!-- /wp:list-item -->\n\n"
-				. "</ul>\n<!-- /wp:list -->\n\n"
-				. ln_p( '[Edit this list so it matches exactly what members receive.]', 'ln-note' ),
+				. "<!-- wp:list-item -->\n<li>A monthly selection of original artworks and postcards</li>\n<!-- /wp:list-item -->\n\n"
+				. "<!-- wp:list-item -->\n<li>Stickers, bookmarks and other little paper surprises to collect, share or gift</li>\n<!-- /wp:list-item -->\n\n"
+				. "<!-- wp:list-item -->\n<li>1-month, 3-month and 6-month subscriptions</li>\n<!-- /wp:list-item -->\n\n"
+				. "</ul>\n<!-- /wp:list -->\n\n",
 			)
 		),
 		'ln-band--cream'
