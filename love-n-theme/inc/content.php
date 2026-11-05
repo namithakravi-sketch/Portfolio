@@ -53,7 +53,7 @@ function ln_page_home() {
 		. ln_group( ln_buttons( array( array( 'Shop now', '/shop/', true ) ) ), 'ln-center' )
 	);
 
-	// 4. Selected work + 5. Features + 6. About (kept short).
+	// 4. Selected work, 5. About, 6. Featured in.
 	$work = ln_section(
 		ln_group( ln_p( 'Portfolio', 'ln-kicker' ) . ln_heading( 'From the <em class="ln-accent">sketchbook</em>' ) . ln_p( 'Illustration, animation and branding. Tap a piece to see it bigger.', 'ln-lede' ), 'ln-section-head ln-center' )
 		. ln_gallery(
@@ -87,8 +87,7 @@ function ln_page_home() {
 				array(
 					ln_p( 'Hello', 'ln-kicker' )
 					. ln_heading( 'I’m <em class="ln-accent">Namitha</em>' )
-					. ln_p( '[Write a few warm sentences about yourself: where you draw from, what you love to make, and the stories behind Love, N.]' )
-					. ln_p( 'I work with brands, publishers and studios on illustration, animation and identity design, and I always love hearing new ideas.' )
+					. ln_p( 'An artist and designer with a love for colour, creativity and all things a little whimsical. I create vibrant digital artworks, illustrations and visual identities, bringing together my love for art, design and storytelling.', 'ln-lede' )
 					. ln_buttons( array( array( 'Work with me', '/contact/' ), array( 'View works', '/work/', true ) ) ),
 					'60%',
 				),
@@ -99,7 +98,7 @@ function ln_page_home() {
 		'ln-band--cream'
 	);
 
-	return $hero . $club . $shop . $work . $features . $about;
+	return $hero . $club . $shop . $work . $about . $features;
 }
 
 function ln_page_work() {
