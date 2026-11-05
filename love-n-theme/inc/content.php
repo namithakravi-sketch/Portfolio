@@ -335,3 +335,53 @@ function ln_page_policy( $title ) {
 		. ln_p( "[Write your {$title} here. WooCommerce → Settings → Advanced can link the shop’s checkout to it.]", 'ln-note' )
 	);
 }
+
+function ln_page_about() {
+	$intro = ln_section(
+		ln_columns(
+			array(
+				array( ln_image( 'about.jpg', 'Namitha Raveendranathan in the studio', 'ln-portrait', '', false ), '40%' ),
+				array(
+					ln_p( 'About', 'ln-kicker' )
+					. ln_heading( 'Hello, I’m <em class="ln-accent">Namitha</em>', 1 )
+					. ln_p( '[Write a few warm sentences about yourself: where you draw from, what you love to make, and how Love, N began.]', 'ln-lede' )
+					. ln_p( '[A second paragraph: your tools and process, the feelings and memories your work returns to, and what you hope people feel when they hold one of your pieces.]' )
+					. ln_buttons( array( array( 'View works', '/work/' ), array( 'Get in touch', '/contact/', true ) ) ),
+					'60%',
+				),
+			),
+			'',
+			'center'
+		)
+	);
+
+	$card = function ( $title, $text ) {
+		return ln_group( ln_heading( $title, 3 ) . ln_p( $text ), 'ln-step' );
+	};
+	$what = ln_section(
+		ln_group( ln_p( 'What I do', 'ln-kicker' ) . ln_heading( 'Ways we can <em class="ln-accent">work together</em>' ), 'ln-section-head' )
+		. ln_columns(
+			array(
+				$card( 'Illustration', 'Editorial pieces, book covers, packaging art and personal commissions.' ),
+				$card( 'Animation', 'Looping moments, short films and moving stories for brands and social.' ),
+				$card( 'Branding', 'Logos and illustrated identities for small businesses with big hearts.' ),
+			),
+			'ln-steps'
+		),
+		'ln-band--sage'
+	);
+
+	$press = ln_section(
+		ln_columns(
+			array(
+				ln_heading( 'As seen <em class="ln-accent">in print</em>' ) . ln_p( 'Magazines and publications that have shared my work.' ),
+				ln_buttons( array( array( 'See the features', '/features/' ), array( 'Contact me', '/contact/', true ) ) ),
+			),
+			'',
+			'center'
+		),
+		'ln-band--cream'
+	);
+
+	return $intro . $what . $press;
+}

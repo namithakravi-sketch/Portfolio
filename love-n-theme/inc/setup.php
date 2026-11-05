@@ -83,6 +83,7 @@ function ln_setup_pages() {
 	ln_upsert_page( 'features', 'Features', ln_page_features() );
 	ln_upsert_page( 'mail-club', 'Love, N Art Mail Club', ln_page_mail_club() );
 	ln_upsert_page( 'contact', 'Contact', ln_page_contact() );
+	ln_upsert_page( 'about', 'About', ln_page_about() );
 	foreach ( array( 'shipping-policy' => 'Shipping policy', 'refund-policy' => 'Refund policy', 'terms-of-service' => 'Terms of service' ) as $slug => $t ) {
 		ln_upsert_page( $slug, $t, ln_page_policy( $t ) );
 	}

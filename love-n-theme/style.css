@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.1.2
+Version: 1.2.1
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -105,38 +105,48 @@ img, video { height: auto; max-width: 100%; }
 	letter-spacing: 0.03em;
 }
 
-/* ---------- Header (nav left · logo centre · icons right) ---------- */
+/* ---------- Header: search · logo · icons, menu centred underneath ---------- */
 .ln-header {
 	background: var(--ln-blush);
 	border-bottom: 1px solid var(--ln-line);
-	padding: 1rem var(--ln-gutter) !important;
+	padding: 1.4rem var(--ln-gutter) 1rem !important;
 	display: grid !important;
 	grid-template-columns: 1fr auto 1fr;
+	grid-template-areas: "search brand icons" "menu menu menu";
 	align-items: center;
-	gap: 1rem;
+	row-gap: 1.1rem;
+	column-gap: 1rem;
 }
 .ln-header > * { margin: 0 !important; }
-.ln-header .wp-block-navigation { font-size: 0.98rem; letter-spacing: 0.06em; justify-self: start; white-space: nowrap; }
-.ln-header .wp-block-navigation a { text-decoration: none; }
-.ln-header .wp-block-navigation a:hover,
-.ln-header .wp-block-navigation .current-menu-item > a { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
-.ln-brand { justify-self: center; text-align: center; }
-.ln-brand .wp-block-site-logo img { max-height: 72px; width: auto; }
-.ln-header .wp-block-site-title { font-family: var(--wp--preset--font-family--heading); font-size: clamp(1.25rem, 2.2vw, 1.75rem); letter-spacing: 0.04em; line-height: 1.1; margin: 0; }
+.ln-search { grid-area: search; justify-self: start; }
+.ln-brand { grid-area: brand; justify-self: center; text-align: center; }
+.ln-icons { grid-area: icons; justify-self: end; display: flex; align-items: center; gap: 1.25rem; }
+.ln-menu { grid-area: menu; justify-self: center; }
+
+.ln-brand .wp-block-site-logo img { max-height: 84px; width: auto; }
+.ln-header .wp-block-site-title { font-family: var(--wp--preset--font-family--heading); font-size: clamp(1.4rem, 2.6vw, 2rem); letter-spacing: 0.04em; line-height: 1.1; margin: 0; }
 .ln-header .wp-block-site-title a { text-decoration: none; }
-.ln-icons { justify-self: end; display: flex; align-items: center; gap: 1rem; }
+
+.ln-menu { font-size: 1.05rem; letter-spacing: 0.06em; }
+.ln-menu .wp-block-navigation-item__content { text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+.ln-menu .wp-block-navigation-item__content:hover,
+.ln-menu .current-menu-item > .wp-block-navigation-item__content { border-bottom-color: currentColor; }
 .wp-block-navigation__responsive-container.is-menu-open { background: var(--ln-blush) !important; }
 .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item { font-family: var(--wp--preset--font-family--heading); font-size: 1.75rem; }
-/* Medium screens: name centred on top, menu centred underneath. */
-@media (min-width: 600px) and (max-width: 1180px) {
-	.ln-header { grid-template-areas: ". brand icons" "nav nav nav"; row-gap: 0.75rem; }
-	.ln-header .wp-block-navigation { grid-area: nav; justify-self: center; }
-	.ln-brand { grid-area: brand; }
-	.ln-icons { grid-area: icons; }
-}
+
+/* Search: icon only until tapped */
+.ln-search .wp-block-search__button { background: none !important; border: 0 !important; color: var(--ln-ink) !important; padding: 6px !important; }
+.ln-search .wp-block-search__button svg { width: 30px !important; height: 30px !important; min-width: 30px; fill: currentColor; }
+.ln-search .wp-block-search__input { border: 1px solid #CDBFB9; border-radius: 999px; padding: 0.5rem 1rem; background: #fff; font: inherit; }
+.ln-search.wp-block-search__searchfield-hidden .wp-block-search__inside-wrapper { border: 0; }
+.ln-icons svg { width: 30px !important; height: 30px !important; }
+
 @media (max-width: 599px) {
-	.ln-header { grid-template-columns: auto 1fr auto; }
-	.ln-brand { justify-self: center; }
+	.ln-header { grid-template-areas: "menu brand icons"; grid-template-columns: auto 1fr auto; padding: 0.9rem var(--ln-gutter) !important; }
+	.ln-search { display: none; }
+	.ln-menu { justify-self: start; }
+	.ln-icons { gap: 0.6rem; }
+	.ln-icons svg { width: 26px !important; height: 26px !important; }
 }
 
 /* ---------- Hero video ---------- */
