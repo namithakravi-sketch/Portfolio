@@ -88,7 +88,7 @@ function ln_page_home() {
 					ln_p( 'Hello', 'ln-kicker' )
 					. ln_heading( 'I’m <em class="ln-accent">Namitha</em>' )
 					. ln_p( 'An artist and designer with a love for colour, creativity and all things a little whimsical. I create vibrant digital artworks, illustrations and visual identities, bringing together my love for art, design and storytelling.', 'ln-lede' )
-					. ln_buttons( array( array( 'Work with me', '/contact/' ), array( 'View works', '/work/', true ) ) ),
+					. ln_buttons( array( array( 'Work with me', '/contact/' ) ) ),
 					'60%',
 				),
 			),
