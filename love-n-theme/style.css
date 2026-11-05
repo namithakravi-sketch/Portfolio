@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.5.0
+Version: 1.5.1
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -508,6 +508,7 @@ main img,
 .ln-insta { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(8px, 1.2vw, 14px); }
 @media (max-width: 781px) { .ln-insta { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .ln-insta--live { display: block; }
+.ln-insta-section .ln-kicker { text-transform: none; letter-spacing: 0.06em; font-size: 0.95rem !important; }
 .ln-insta__tile { position: relative; display: block; overflow: hidden; border-radius: var(--ln-radius); aspect-ratio: 1; }
 .ln-insta__tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ln-ease); }
 .ln-insta__icon { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; background: rgba(46, 43, 39, 0.35); opacity: 0; transition: opacity 0.25s ease; }
