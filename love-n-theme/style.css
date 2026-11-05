@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.2.5
+Version: 1.2.6
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -65,7 +65,7 @@ img, video { height: auto; max-width: 100%; }
 
 /* Arrow links like "Postcards →" */
 .ln-arrow a, a.ln-arrow { text-decoration: none; }
-.ln-arrow a::after, a.ln-arrow::after { content: " →"; display: inline-block; transition: transform 0.25s var(--ln-ease); }
+.ln-arrow a::after, a.ln-arrow::after { content: "\00a0→"; display: inline-block; transition: transform 0.25s var(--ln-ease); }
 .ln-arrow a:hover::after, a.ln-arrow:hover::after { transform: translateX(4px); }
 
 /* ---------- Sections & bands ---------- */
@@ -377,6 +377,35 @@ img, video { height: auto; max-width: 100%; }
 .wc-block-components-product-price, .woocommerce .price { letter-spacing: 0.05em; }
 .woocommerce span.onsale, .wc-block-components-product-sale-badge { background: var(--ln-butter); color: var(--ln-ink); border: 0; border-radius: 999px; }
 .wc-block-components-button:not(.is-link), .woocommerce button.button.alt, .woocommerce a.button.alt { background: var(--ln-butter) !important; color: var(--ln-ink) !important; border-radius: 999px !important; }
+
+/* ---------- Buttons: hover, focus and press feedback ---------- */
+.wp-element-button,
+.wp-block-button__link {
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+	cursor: pointer;
+}
+.wp-element-button:hover,
+.wp-block-button__link:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(46, 43, 39, 0.14); }
+.wp-element-button:active,
+.wp-block-button__link:active { transform: translateY(0); box-shadow: none; }
+/* Outline buttons fill in on hover/tap */
+.is-style-outline .wp-block-button__link:hover,
+.is-style-outline .wp-block-button__link:focus-visible,
+.is-style-outline .wp-block-button__link:active {
+	background: var(--ln-ink) !important;
+	color: var(--ln-cream) !important;
+	border-color: var(--ln-ink) !important;
+}
+.ln-band--forest .is-style-outline .wp-block-button__link:hover,
+.ln-band--forest .is-style-outline .wp-block-button__link:active,
+.ln-hero .is-style-outline .wp-block-button__link:hover,
+.ln-hero .is-style-outline .wp-block-button__link:active {
+	background: var(--ln-cream) !important;
+	color: var(--ln-ink) !important;
+	border-color: var(--ln-cream) !important;
+}
+/* Filled (yellow) buttons press slightly darker */
+.wp-block-button:not(.is-style-outline) .wp-block-button__link:active { background: #E0B23A !important; }
 
 /* ---------- Motion ---------- */
 @media (prefers-reduced-motion: reduce) {

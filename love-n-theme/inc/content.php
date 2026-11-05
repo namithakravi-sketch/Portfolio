@@ -50,7 +50,7 @@ function ln_page_home() {
 			. ln_photo_card( 'shop-stickers.jpg', 'Love, N stickers', 'Stickers', '/product-category/stickers/', 'ln-tile' ),
 			'ln-grid'
 		)
-		. ln_group( ln_buttons( array( array( 'Shop everything', '/shop/', true ) ) ), 'ln-center' )
+		. ln_group( ln_buttons( array( array( 'Shop now', '/shop/', true ) ) ), 'ln-center' )
 	);
 
 	// 4. Selected work + 5. Features + 6. About (kept short).
