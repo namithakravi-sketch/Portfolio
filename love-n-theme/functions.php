@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOVE_N_VERSION', '1.5.1' );
+define( 'LOVE_N_VERSION', '1.6.0' );
 
 require_once get_theme_file_path( 'inc/blocks.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
@@ -34,6 +34,7 @@ add_action(
 		wp_enqueue_style( 'love-n', get_stylesheet_uri(), array(), LOVE_N_VERSION );
 		wp_enqueue_script( 'love-n-protect', get_theme_file_uri( 'assets/js/protect.js' ), array(), LOVE_N_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		wp_enqueue_script( 'love-n-reveal', get_theme_file_uri( 'assets/js/reveal.js' ), array(), LOVE_N_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_enqueue_script( 'love-n-nav', get_theme_file_uri( 'assets/js/nav.js' ), array(), LOVE_N_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		wp_enqueue_script( 'love-n-tabs', get_theme_file_uri( 'assets/js/tabs.js' ), array(), LOVE_N_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 	}
 );
@@ -118,5 +119,21 @@ add_filter(
 		return $html;
 	},
 	PHP_INT_MAX,
+	2
+);
+
+/* "← Back" link under the header on every page except the home page. */
+add_filter(
+	'render_block_core/template-part',
+	function ( $html, $block ) {
+		if ( 'header' !== ( $block['attrs']['slug'] ?? '' ) || is_front_page() || is_admin() ) {
+			return $html;
+		}
+		$in_shop  = function_exists( 'is_product' ) && ( is_product() || is_product_category() || is_cart() || is_checkout() );
+		$fallback = $in_shop && function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
+		return $html . '<nav class="ln-back" aria-label="' . esc_attr__( 'Back', 'love-n' ) . '"><a href="' . esc_url( $fallback ) . '" data-ln-back>'
+			. '<span class="ln-back__arrow" aria-hidden="true">←</span> ' . esc_html__( 'Back', 'love-n' ) . '</a></nav>';
+	},
+	10,
 	2
 );
