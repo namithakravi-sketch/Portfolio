@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOVE_N_VERSION', '1.3.7' );
+define( 'LOVE_N_VERSION', '1.4.1' );
 
 require_once get_theme_file_path( 'inc/blocks.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
@@ -32,6 +32,7 @@ add_action(
 	'wp_enqueue_scripts',
 	function () {
 		wp_enqueue_style( 'love-n', get_stylesheet_uri(), array(), LOVE_N_VERSION );
+		wp_enqueue_script( 'love-n-protect', get_theme_file_uri( 'assets/js/protect.js' ), array(), LOVE_N_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		wp_enqueue_script( 'love-n-tabs', get_theme_file_uri( 'assets/js/tabs.js' ), array(), LOVE_N_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
 	}
 );
