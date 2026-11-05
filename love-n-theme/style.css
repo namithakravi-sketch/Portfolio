@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.3.6
+Version: 1.3.7
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -142,6 +142,8 @@ img, video { height: auto; max-width: 100%; }
 .ln-search .wp-block-search__input { border: 1px solid #CDBFB9; border-radius: 999px; padding: 0.5rem 1rem; background: #fff; font: inherit; }
 .ln-search.wp-block-search__searchfield-hidden .wp-block-search__inside-wrapper { border: 0; }
 .ln-icons svg { width: 30px !important; height: 30px !important; }
+.ln-cart-fallback { display: inline-flex; color: var(--ln-ink); line-height: 0; }
+.ln-cart-fallback:hover { color: var(--ln-terracotta); }
 
 @media (max-width: 599px) {
 	.ln-header { grid-template-areas: "menu brand icons"; grid-template-columns: auto 1fr auto; padding: 0.9rem var(--ln-gutter) !important; }
