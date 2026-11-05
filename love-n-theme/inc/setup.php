@@ -171,9 +171,9 @@ function ln_setup_shop() {
 		array( 'bookmarks', 'Love, N Bookmark Set', 'A set of three illustrated bookmarks to keep your place in style.', 199 ),
 		array( 'stickers', 'Love, N Sticker Sheet', 'A sheet of glossy illustrated stickers for journals, laptops and happy mail.', 149 ),
 		array( 'postcards', 'Love, N Postcard Pack', 'A pack of five illustrated postcards to send or display.', 249 ),
-		array( 'mail-club', 'Mail Club · 3 months', 'Three monthly envelopes of exclusive art, stickers and stationery.', 1499 ),
-		array( 'mail-club', 'Mail Club · 6 months', 'Six monthly envelopes, plus a bonus welcome print in your first mailing.', 2799 ),
-		array( 'mail-club', 'Mail Club · 12 months', 'A whole year of happy mail, plus a bonus welcome print and a members-only sticker.', 5199 ),
+		array( 'mail-club', 'Mail Club · 1 month', 'One envelope of original artworks, postcards, stickers and little paper surprises. A lovely way to try the club, or to send as a gift.', 499 ),
+		array( 'mail-club', 'Mail Club · 3 months', 'Three monthly envelopes of original artworks, postcards, stickers and little paper surprises.', 1497 ),
+		array( 'mail-club', 'Mail Club · 6 months', 'Six monthly envelopes of original artworks, postcards, stickers and little paper surprises.', 2994 ),
 	);
 	foreach ( $products as $order => $p ) {
 		list( $cat, $name, $desc, $price ) = $p;

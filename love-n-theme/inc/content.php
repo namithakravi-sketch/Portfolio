@@ -269,7 +269,7 @@ function ln_page_mail_club() {
 		. ln_group( ln_p( 'How it works', 'ln-kicker' ) . ln_heading( 'Joining is <em class="ln-accent">easy</em>' ), 'ln-section-head' )
 		. ln_columns(
 			array(
-				ln_group( ln_heading( 'Pick a plan', 3 ) . ln_p( '3 months, 6 months or a whole year of happy mail.' ), 'ln-step' ),
+				ln_group( ln_heading( 'Pick a plan', 3 ) . ln_p( '1 month, 3 months or 6 months of happy mail.' ), 'ln-step' ),
 				ln_group( ln_heading( 'Check out securely', 3 ) . ln_p( 'Pay online and add the address your envelopes should go to.' ), 'ln-step' ),
 				ln_group( ln_heading( 'Watch the letterbox', 3 ) . ln_p( 'Your first envelope ships with the next club mailing. [Add your posting date.]' ), 'ln-step' ),
 			),
