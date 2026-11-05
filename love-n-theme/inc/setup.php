@@ -193,9 +193,12 @@ function ln_setup_shop() {
 		array( 'bookmarks', 'Love, N Bookmark Set', 'A set of three illustrated bookmarks to keep your place in style.', 199 ),
 		array( 'stickers', 'Love, N Sticker Sheet', 'A sheet of glossy illustrated stickers for journals, laptops and happy mail.', 149 ),
 		array( 'postcards', 'Love, N Postcard Pack', 'A pack of five illustrated postcards to send or display.', 249 ),
-		array( 'mail-club', 'Mail Club · 1 month', 'One envelope of original artworks, postcards, stickers and little paper surprises. A lovely way to try the club, or to send as a gift.', 499 ),
-		array( 'mail-club', 'Mail Club · 3 months', 'Three monthly envelopes of original artworks, postcards, stickers and little paper surprises.', 1497 ),
-		array( 'mail-club', 'Mail Club · 6 months', 'Six monthly envelopes of original artworks, postcards, stickers and little paper surprises.', 2994 ),
+		array( 'mail-club', 'Mail Club (India) · 1 month', 'One envelope of original artworks, postcards, stickers and little paper surprises. A lovely way to try the club, or to send as a gift.', 499 ),
+		array( 'mail-club', 'Mail Club (India) · 3 months', 'Three monthly envelopes of original artworks, postcards, stickers and little paper surprises.', 1497 ),
+		array( 'mail-club', 'Mail Club (India) · 6 months', 'Six monthly envelopes of original artworks, postcards, stickers and little paper surprises.', 2994 ),
+		array( 'mail-club', 'Mail Club (International) · 1 month', 'One envelope of original artworks, postcards, stickers and little paper surprises, posted to you outside India.', 1760 ),
+		array( 'mail-club', 'Mail Club (International) · 3 months', 'Three monthly envelopes of original artworks, postcards, stickers and little paper surprises, posted to you outside India.', 5280 ),
+		array( 'mail-club', 'Mail Club (International) · 6 months', 'Six monthly envelopes of original artworks, postcards, stickers and little paper surprises, posted to you outside India.', 10560 ),
 	);
 	foreach ( $products as $order => $p ) {
 		list( $cat, $name, $desc, $price ) = $p;
@@ -222,6 +225,7 @@ function ln_setup_shop() {
 		$product->set_menu_order( $order );
 		if ( 'mail-club' === $cat ) {
 			$product->set_sold_individually( true );
+			$product->update_meta_data( '_ln_region', false !== strpos( $name, 'International' ) ? 'international' : 'india' );
 		}
 		if ( ! empty( $images[ $cat ] ) ) {
 			$product->set_image_id( $images[ $cat ] );

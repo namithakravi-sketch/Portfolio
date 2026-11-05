@@ -315,10 +315,17 @@ add_shortcode(
 );
 
 /* ---------- [ln_mail_club_plans] ----------
- * Product-style picker: photo, title, price, plan pills, one "Join" button.
- * Each plan is a simple product in the "Art Mail Club" category; the button
- * adds the chosen one to the cart and goes straight to checkout.
+ * Product-style picker: photo, title, price, "Delivering to" switch
+ * (India / Outside India), plan pills and one "Join" button.
+ * Each plan is a simple product in the "Art Mail Club" category with a
+ * _ln_region meta of "india" (default) or "international"; the button adds
+ * the chosen one to the cart and goes straight to checkout.
  */
+function ln_club_region( $product ) {
+	$r = $product ? $product->get_meta( '_ln_region' ) : '';
+	return 'international' === $r ? 'international' : 'india';
+}
+
 add_shortcode(
 	'ln_mail_club_plans',
 	function () {
@@ -332,7 +339,7 @@ add_shortcode(
 				'status'   => 'publish',
 				'orderby'  => 'menu_order',
 				'order'    => 'ASC',
-				'limit'    => 6,
+				'limit'    => 12,
 			)
 		) : array();
 		$products = array_values( array_filter( $products, fn( $p ) => $p->is_purchasable() && $p->is_in_stock() ) );
@@ -342,12 +349,21 @@ add_shortcode(
 				. '<p class="ln-plans-empty">New club spots are coming soon. Join the waitlist below and you’ll be the first to know.</p></div></div>';
 		}
 
-		// Short labels for the pills: "Mail Club · 3 months" → "3 months".
+		$regions = array(
+			'india'         => array( 'label' => 'India', 'plans' => array() ),
+			'international' => array( 'label' => 'Outside India', 'plans' => array() ),
+		);
+		foreach ( $products as $p ) {
+			$regions[ ln_club_region( $p ) ]['plans'][] = $p;
+		}
+		$regions = array_filter( $regions, fn( $r ) => $r['plans'] );
+		$first   = reset( $regions )['plans'][0];
+
+		// Short labels for the pills: "Mail Club (India) · 3 months" → "3 months".
 		$label = function ( $p ) {
 			$parts = explode( '·', $p->get_name() );
 			return trim( end( $parts ) );
 		};
-		$first = $products[0];
 
 		ob_start();
 		?>
@@ -357,12 +373,28 @@ add_shortcode(
 				<h1 class="ln-club-product__title"><?php echo esc_html( $title ); ?></h1>
 				<p class="ln-club-product__price" data-ln-price><?php echo wp_kses_post( $first->get_price_html() ); ?></p>
 				<p class="ln-club-product__small">Shipping calculated at checkout. No automatic renewals.</p>
-				<fieldset>
+
+				<?php if ( count( $regions ) > 1 ) : ?>
+				<fieldset class="ln-region">
+					<legend>Delivering to</legend>
+					<div class="ln-pills">
+						<?php $i = 0; foreach ( $regions as $key => $r ) : ?>
+							<label class="ln-pill">
+								<input type="radio" name="ln_region" value="<?php echo esc_attr( $key ); ?>" <?php checked( 0, $i++ ); ?>>
+								<span><?php echo esc_html( $r['label'] ); ?></span>
+							</label>
+						<?php endforeach; ?>
+					</div>
+				</fieldset>
+				<?php endif; ?>
+
+				<?php $i = 0; foreach ( $regions as $key => $r ) : ?>
+				<fieldset class="ln-plan-set" data-region="<?php echo esc_attr( $key ); ?>"<?php echo $i++ ? ' hidden disabled' : ''; ?>>
 					<legend>Subscription</legend>
 					<div class="ln-pills">
-						<?php foreach ( $products as $i => $p ) : ?>
+						<?php foreach ( $r['plans'] as $j => $p ) : ?>
 							<label class="ln-pill">
-								<input type="radio" name="add-to-cart" value="<?php echo esc_attr( $p->get_id() ); ?>" <?php checked( 0, $i ); ?>
+								<input type="radio" name="add-to-cart" value="<?php echo esc_attr( $p->get_id() ); ?>" <?php checked( true, 1 === $i && 0 === $j ); ?>
 									data-price="<?php echo esc_attr( wp_strip_all_tags( wc_price( $p->get_price() ) ) ); ?>"
 									data-desc="<?php echo esc_attr( wp_strip_all_tags( $p->get_short_description() ) ); ?>">
 								<span><?php echo esc_html( $label( $p ) ); ?></span>
@@ -370,6 +402,8 @@ add_shortcode(
 						<?php endforeach; ?>
 					</div>
 				</fieldset>
+				<?php endforeach; ?>
+
 				<p class="ln-plan-desc" data-ln-desc><?php echo esc_html( wp_strip_all_tags( $first->get_short_description() ) ); ?></p>
 				<button type="submit" class="wp-element-button">Join the club</button>
 				<a class="ln-club-product__more ln-arrow" href="#how-it-works">How it works</a>
@@ -377,17 +411,90 @@ add_shortcode(
 		</div>
 		<script>
 		document.querySelectorAll('.ln-club-product__info').forEach(function (f) {
-			f.addEventListener('change', function (e) {
-				var r = e.target;
-				if (!r.dataset || !r.dataset.price) return;
+			function show(r) {
 				f.querySelector('[data-ln-price]').textContent = r.dataset.price;
 				f.querySelector('[data-ln-desc]').textContent = r.dataset.desc;
+			}
+			function setRegion(region) {
+				f.querySelectorAll('.ln-plan-set').forEach(function (s) {
+					var on = s.dataset.region === region;
+					s.hidden = !on;
+					s.disabled = !on; // only the visible set is submitted
+				});
+				// Keep the same plan length when switching region (e.g. 3 months stays 3 months).
+				var current = f.querySelector('input[name="add-to-cart"]:checked');
+				var idx = current ? Array.prototype.indexOf.call(current.closest('.ln-pills').querySelectorAll('input'), current) : 0;
+				var set = f.querySelector('.ln-plan-set[data-region="' + region + '"]');
+				var inputs = set ? set.querySelectorAll('input') : [];
+				var pick = inputs[idx] || inputs[0];
+				if (pick) { pick.checked = true; show(pick); }
+				try { localStorage.setItem('lnClubRegion', region); } catch (e) {}
+			}
+			f.addEventListener('change', function (e) {
+				var r = e.target;
+				if (r.name === 'ln_region') setRegion(r.value);
+				else if (r.dataset && r.dataset.price) show(r);
 			});
+			var saved = null;
+			try { saved = localStorage.getItem('lnClubRegion'); } catch (e) {}
+			var savedInput = saved && f.querySelector('input[name="ln_region"][value="' + saved + '"]');
+			if (savedInput) { savedInput.checked = true; setRegion(saved); }
 		});
 		</script>
 		<?php
 		return ob_get_clean();
 	}
+);
+
+/*
+ * Checkout check: India plans ship only within India, international plans only
+ * outside it. Works with both the block checkout and the classic checkout.
+ */
+function ln_club_region_error( $country, $items ) {
+	if ( ! $country ) {
+		return '';
+	}
+	foreach ( $items as $product ) {
+		if ( ! $product || ! has_term( 'mail-club', 'product_cat', $product->get_parent_id() ?: $product->get_id() ) ) {
+			continue;
+		}
+		$region = ln_club_region( $product );
+		if ( 'india' === $region && 'IN' !== $country ) {
+			return __( 'The Mail Club plan in your basket is for delivery within India. For an address outside India, please go back to the Mail Club page and choose “Outside India”.', 'love-n' );
+		}
+		if ( 'international' === $region && 'IN' === $country ) {
+			return __( 'The Mail Club plan in your basket is for delivery outside India. For an Indian address, please go back to the Mail Club page and choose “India”.', 'love-n' );
+		}
+	}
+	return '';
+}
+
+// Block checkout (Store API).
+add_action(
+	'woocommerce_store_api_checkout_update_order_from_request',
+	function ( $order ) {
+		$country = $order->get_shipping_country() ?: $order->get_billing_country();
+		$items   = array_map( fn( $i ) => $i->get_product(), array_values( $order->get_items() ) );
+		$error   = ln_club_region_error( $country, $items );
+		if ( $error && class_exists( '\Automattic\WooCommerce\StoreApi\Exceptions\RouteException' ) ) {
+			throw new \Automattic\WooCommerce\StoreApi\Exceptions\RouteException( 'ln_club_region', $error, 400 );
+		}
+	}
+);
+
+// Classic checkout.
+add_action(
+	'woocommerce_after_checkout_validation',
+	function ( $data, $errors ) {
+		$country = ! empty( $data['ship_to_different_address'] ) ? ( $data['shipping_country'] ?? '' ) : ( $data['billing_country'] ?? '' );
+		$items   = array_map( fn( $i ) => $i['data'] ?? null, WC()->cart ? WC()->cart->get_cart() : array() );
+		$error   = ln_club_region_error( $country, $items );
+		if ( $error ) {
+			$errors->add( 'ln_club_region', $error );
+		}
+	},
+	10,
+	2
 );
 
 /* ---------- [ln_instagram url="https://instagram.com/handle"] ----------
@@ -414,4 +521,23 @@ add_shortcode(
 		}
 		return $out . '</div>';
 	}
+);
+
+// Basket stage (block checkout): flags a mismatch as soon as the customer's
+// address is entered, and blocks placing the order before payment is attempted.
+add_action(
+	'woocommerce_store_api_cart_errors',
+	function ( $errors, $cart ) {
+		if ( ! WC()->customer || ! $cart ) {
+			return;
+		}
+		$country = WC()->customer->get_shipping_country() ?: WC()->customer->get_billing_country();
+		$items   = array_map( fn( $i ) => $i['data'] ?? null, $cart->get_cart() );
+		$error   = ln_club_region_error( $country, $items );
+		if ( $error ) {
+			$errors->add( 'ln_club_region', $error );
+		}
+	},
+	10,
+	2
 );
