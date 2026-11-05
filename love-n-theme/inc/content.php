@@ -60,10 +60,11 @@ function ln_page_home() {
 			array(
 				array( 'illustration-1.jpg', '[Describe this illustration]', '' ),
 				array( 'illustration-2.jpg', '[Describe this illustration]', '' ),
-				array( 'branding-1.jpg', '[Describe this branding project]', '' ),
 				array( 'illustration-3.jpg', '[Describe this illustration]', '' ),
+				array( 'branding-1.jpg', '[Describe this branding project]', '' ),
+				array( 'animation-1.jpg', '[Describe this animation still]', '' ),
 			),
-			4
+			3
 		)
 		. ln_group( ln_buttons( array( array( 'View works', '/work/' ) ) ), 'ln-center' ),
 		'ln-band--sage'
