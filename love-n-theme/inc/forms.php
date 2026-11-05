@@ -372,7 +372,8 @@ add_shortcode(
 			<form class="ln-club-product__info" method="get" action="<?php echo esc_url( wc_get_checkout_url() ); ?>">
 				<h1 class="ln-club-product__title"><?php echo esc_html( $title ); ?></h1>
 				<p class="ln-club-product__price" data-ln-price><?php echo wp_kses_post( $first->get_price_html() ); ?></p>
-				<p class="ln-club-product__small">Shipping calculated at checkout. No automatic renewals.</p>
+				<p class="ln-club-product__small">Postage included in India and worldwide · Tracked post available at checkout · No automatic renewals.</p>
+				<p class="ln-club-product__hint">Choose your location to see subscription plans and shipping-inclusive prices.</p>
 
 				<?php if ( count( $regions ) > 1 ) : ?>
 				<fieldset class="ln-region">
@@ -405,8 +406,38 @@ add_shortcode(
 				<?php endforeach; ?>
 
 				<p class="ln-plan-desc" data-ln-desc><?php echo esc_html( wp_strip_all_tags( $first->get_short_description() ) ); ?></p>
-				<button type="submit" class="wp-element-button">Join the club</button>
-				<a class="ln-club-product__more ln-arrow" href="#how-it-works">How it works</a>
+				<div class="ln-qty">
+					<label for="ln-club-qty">Quantity</label>
+					<div class="ln-qty__box">
+						<button type="button" class="ln-qty__btn" data-step="-1" aria-label="Decrease quantity">−</button>
+						<input id="ln-club-qty" type="number" name="quantity" value="1" min="1" max="10" step="1" inputmode="numeric">
+						<button type="button" class="ln-qty__btn" data-step="1" aria-label="Increase quantity">+</button>
+					</div>
+				</div>
+				<div class="ln-club-actions">
+					<button type="submit" class="wp-element-button ln-btn-outline" formaction="<?php echo esc_url( wc_get_cart_url() ); ?>">Add to cart</button>
+					<button type="submit" class="wp-element-button">Buy it now</button>
+				</div>
+
+				<div class="ln-club-about">
+					<p><strong>Welcome to the Love, N Art Mail Club! 💌</strong></p>
+					<p>Somewhere between endless scrolling and notifications, I started missing the simple joy of real post: an envelope with your name on it, something you can hold, keep and pin to a wall. So I made a little club for it.</p>
+					<p>Every month I pack an envelope just for you, filled with original artworks, postcards, stickers and paper goodies, all illustrated and hand-packed by me in my studio, along with a little note about what I’ve been making, learning and dreaming up.</p>
+					<p>Subscribe before the end of each month to receive the next month’s mail.</p>
+					<details class="wp-block-details ln-club-shipping">
+						<summary>Shipping</summary>
+						<ul>
+							<li><strong>Zone:</strong> India and worldwide</li>
+							<li><strong>Service:</strong> India Post</li>
+							<li><strong>Postage:</strong> Included in the price, in India and abroad. Tracked (registered) post is available at checkout for a small extra charge.</li>
+							<li><strong>Delivery time:</strong> 3–10 days across India | 7–21 days abroad, depending on the destination country and customs.</li>
+							<li><strong>Lost mail:</strong> If your untracked mail hasn’t arrived within 4 weeks, get in touch and I’ll send you a new one.</li>
+							<li><strong>Customs:</strong> Prices don’t include any taxes or duties your local customs authority may charge.</li>
+						</ul>
+						<p>Payment is processed in Indian rupees (₹).</p>
+					</details>
+					<a class="ln-club-product__more ln-arrow" href="#how-it-works">How it works</a>
+				</div>
 			</form>
 		</div>
 		<script>
@@ -430,6 +461,13 @@ add_shortcode(
 				if (pick) { pick.checked = true; show(pick); }
 				try { localStorage.setItem('lnClubRegion', region); } catch (e) {}
 			}
+			var qty = f.querySelector('#ln-club-qty');
+			f.querySelectorAll('.ln-qty__btn').forEach(function (b) {
+				b.addEventListener('click', function () {
+					var v = parseInt(qty.value, 10) || 1;
+					qty.value = Math.min(10, Math.max(1, v + parseInt(b.dataset.step, 10)));
+				});
+			});
 			f.addEventListener('change', function (e) {
 				var r = e.target;
 				if (r.name === 'ln_region') setRegion(r.value);

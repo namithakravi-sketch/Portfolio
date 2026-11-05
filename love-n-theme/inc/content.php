@@ -256,7 +256,7 @@ function ln_page_mail_club() {
 			array(
 				ln_group( ln_heading( 'Pick a plan', 3 ) . ln_p( '1 month, 3 months or 6 months of happy mail.' ), 'ln-step' ),
 				ln_group( ln_heading( 'Check out securely', 3 ) . ln_p( 'Pay online and add the address your envelopes should go to.' ), 'ln-step' ),
-				ln_group( ln_heading( 'Watch the letterbox', 3 ) . ln_p( 'Your first envelope ships with the next club mailing. [Add your posting date.]' ), 'ln-step' ),
+				ln_group( ln_heading( 'Watch the letterbox', 3 ) . ln_p( 'Subscribe before the end of the month and your first envelope arrives with the next month’s mailing.' ), 'ln-step' ),
 			),
 			'ln-steps'
 		),
@@ -267,8 +267,8 @@ function ln_page_mail_club() {
 		ln_columns(
 			array(
 				ln_p( 'Questions', 'ln-kicker' ) . ln_heading( 'Good to <em class="ln-accent">know</em>' ),
-				ln_details( 'When do envelopes ship?', '[Add the date or week each month that club mail is posted.]' )
-				. ln_details( 'Where do you ship to?', '[List the countries you send club mail to, and how international members pay.]' )
+				ln_details( 'When do envelopes ship?', 'Subscribe before the end of each month to receive the next month’s mail. Envelopes go out by India Post and usually arrive within 3–10 days in India and 7–21 days abroad.' )
+				. ln_details( 'Where do you ship to?', 'Across India and worldwide. Postage is included in the price: choose “International” on this page for addresses outside India. Tracked post is available at checkout for a small extra charge.' )
 				. ln_details( 'Can I give the Mail Club as a gift?', 'Yes! Add the lucky person’s address as the shipping address at checkout, and leave a note if you’d like a gift message included.' )
 				. ln_details( 'What happens when my plan ends?', 'Your envelopes stop after the last month you paid for. I’ll email you before then, so you can rejoin if you’d like to keep the happy mail coming.' ),
 			)

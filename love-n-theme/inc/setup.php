@@ -224,7 +224,6 @@ function ln_setup_shop() {
 		$product->set_category_ids( array( $ids[ $cat ] ) );
 		$product->set_menu_order( $order );
 		if ( 'mail-club' === $cat ) {
-			$product->set_sold_individually( true );
 			$product->update_meta_data( '_ln_region', false !== strpos( $name, 'International' ) ? 'international' : 'india' );
 		}
 		if ( ! empty( $images[ $cat ] ) ) {
