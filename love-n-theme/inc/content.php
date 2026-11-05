@@ -183,7 +183,7 @@ function ln_page_work() {
 
 	$cta = ln_section(
 		ln_heading( 'Have a project in mind? <em class="ln-accent">Let’s talk.</em>' )
-		. ln_buttons( array( array( 'Get in touch', '/contact/' ), array( 'Shop the prints', '/shop/', true ) ) ),
+		. ln_buttons( array( array( 'Get in touch', '/contact/', true ), array( 'Shop the prints', '/shop/', true ) ) ),
 		'ln-band--rose ln-center'
 	);
 
