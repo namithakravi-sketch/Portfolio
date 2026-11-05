@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.4.1
+Version: 1.4.2
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -455,19 +455,26 @@ main img,
 	-webkit-user-drag: none;
 	-webkit-touch-callout: none; /* no "Save image" on iPhone/iPad long-press */
 }
-/* Watermark over enlarged images */
+/* Watermark along the bottom of enlarged images */
 .wp-lightbox-overlay .lightbox-image-container figure,
-.pswp__img--wrapper,
 .pswp__zoom-wrap { position: relative; }
 .wp-lightbox-overlay .lightbox-image-container figure::after,
 .pswp__zoom-wrap::after {
-	content: "";
+	content: "© Namitha Raveendranathan";
 	position: absolute;
-	inset: 0;
-	pointer-events: none;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='460' height='260'%3E%3Ctext x='230' y='140' text-anchor='middle' transform='rotate%28-22 230 130%29' font-family='Georgia%2C serif' font-size='22' fill='white' fill-opacity='0.32' stroke='black' stroke-opacity='0.12' stroke-width='0.6'%3E%C2%A9 Namitha Raveendranathan%3C/text%3E%3C/svg%3E");
-	background-repeat: repeat;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	z-index: 2;
+	pointer-events: none;
+	padding: 2.2em 1em 0.9em;
+	text-align: center;
+	font-family: var(--wp--preset--font-family--heading);
+	font-size: clamp(0.8rem, 1.4vw, 1rem);
+	letter-spacing: 0.08em;
+	color: rgba(255, 255, 255, 0.92);
+	text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0));
 }
 /* Blur enlarged images while the window isn't focused */
 .ln-unfocused .wp-lightbox-overlay img,
