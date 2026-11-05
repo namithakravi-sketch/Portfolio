@@ -314,14 +314,19 @@ add_shortcode(
 	}
 );
 
-/* ---------- [ln_mail_club_plans] ---------- */
+/* ---------- [ln_mail_club_plans] ----------
+ * Product-style picker: photo, title, price, plan pills, one "Join" button.
+ * Each plan is a simple product in the "Art Mail Club" category; the button
+ * adds the chosen one to the cart and goes straight to checkout.
+ */
 add_shortcode(
 	'ln_mail_club_plans',
 	function () {
-		if ( ! class_exists( 'WooCommerce' ) ) {
-			return '<p class="ln-plans-empty">Mail Club plans appear here once the shop is switched on.</p>';
-		}
-		$products = wc_get_products(
+		$img   = esc_url( ln_img_url( 'shop-mail-club.jpg' ) );
+		$title = 'Love, N Art Mail Club 💌';
+		$media = '<div class="ln-club-product__media"><img src="' . $img . '" alt="What arrives in a Love, N Art Mail Club envelope"></div>';
+
+		$products = class_exists( 'WooCommerce' ) ? wc_get_products(
 			array(
 				'category' => array( 'mail-club' ),
 				'status'   => 'publish',
@@ -329,31 +334,58 @@ add_shortcode(
 				'order'    => 'ASC',
 				'limit'    => 6,
 			)
-		);
+		) : array();
+		$products = array_values( array_filter( $products, fn( $p ) => $p->is_purchasable() && $p->is_in_stock() ) );
+
 		if ( ! $products ) {
-			return '<p class="ln-plans-empty">New Mail Club plans are coming soon. Join the waitlist below and you’ll be first to know.</p>';
+			return '<div class="ln-club-product">' . $media . '<div><h1 class="ln-club-product__title">' . esc_html( $title ) . '</h1>'
+				. '<p class="ln-plans-empty">New club spots are coming soon. Join the waitlist below and you’ll be the first to know.</p></div></div>';
 		}
-		$checkout = wc_get_checkout_url();
+
+		// Short labels for the pills: "Mail Club · 3 months" → "3 months".
+		$label = function ( $p ) {
+			$parts = explode( '·', $p->get_name() );
+			return trim( end( $parts ) );
+		};
+		$first = $products[0];
+
 		ob_start();
-		echo '<div class="ln-plans">';
-		foreach ( $products as $i => $product ) {
-			$featured = 1 === $i;
-			$url      = add_query_arg( 'add-to-cart', $product->get_id(), $checkout );
-			?>
-			<div class="ln-plan<?php echo $featured ? ' ln-plan--featured' : ''; ?>">
-				<?php if ( $featured ) : ?><span class="ln-plan__badge">Most loved</span><?php endif; ?>
-				<p class="ln-plan__name"><?php echo esc_html( $product->get_name() ); ?></p>
-				<p class="ln-plan__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></p>
-				<div class="ln-plan__desc"><?php echo wp_kses_post( wpautop( $product->get_short_description() ) ); ?></div>
-				<?php if ( $product->is_purchasable() && $product->is_in_stock() ) : ?>
-					<a class="wp-element-button" href="<?php echo esc_url( $url ); ?>">Join with this plan</a>
-				<?php else : ?>
-					<span class="ln-plan__desc"><strong>Full for now.</strong> Join the waitlist below.</span>
-				<?php endif; ?>
-			</div>
-			<?php
-		}
-		echo '</div>';
+		?>
+		<div class="ln-club-product">
+			<?php echo $media; // phpcs:ignore WordPress.Security.EscapeOutput ?>
+			<form class="ln-club-product__info" method="get" action="<?php echo esc_url( wc_get_checkout_url() ); ?>">
+				<h1 class="ln-club-product__title"><?php echo esc_html( $title ); ?></h1>
+				<p class="ln-club-product__price" data-ln-price><?php echo wp_kses_post( $first->get_price_html() ); ?></p>
+				<p class="ln-club-product__small">Shipping calculated at checkout. No automatic renewals.</p>
+				<fieldset>
+					<legend>Subscription</legend>
+					<div class="ln-pills">
+						<?php foreach ( $products as $i => $p ) : ?>
+							<label class="ln-pill">
+								<input type="radio" name="add-to-cart" value="<?php echo esc_attr( $p->get_id() ); ?>" <?php checked( 0, $i ); ?>
+									data-price="<?php echo esc_attr( wp_strip_all_tags( wc_price( $p->get_price() ) ) ); ?>"
+									data-desc="<?php echo esc_attr( wp_strip_all_tags( $p->get_short_description() ) ); ?>">
+								<span><?php echo esc_html( $label( $p ) ); ?></span>
+							</label>
+						<?php endforeach; ?>
+					</div>
+				</fieldset>
+				<p class="ln-plan-desc" data-ln-desc><?php echo esc_html( wp_strip_all_tags( $first->get_short_description() ) ); ?></p>
+				<button type="submit" class="wp-element-button">Join the club</button>
+				<a class="ln-club-product__more ln-arrow" href="#how-it-works">How it works</a>
+			</form>
+		</div>
+		<script>
+		document.querySelectorAll('.ln-club-product__info').forEach(function (f) {
+			f.addEventListener('change', function (e) {
+				var r = e.target;
+				if (!r.dataset || !r.dataset.price) return;
+				f.querySelector('[data-ln-price]').textContent = r.dataset.price;
+				f.querySelector('[data-ln-desc]').textContent = r.dataset.desc;
+			});
+		});
+		</script>
+		<?php
 		return ob_get_clean();
 	}
 );

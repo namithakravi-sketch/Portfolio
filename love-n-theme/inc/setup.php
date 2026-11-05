@@ -1,11 +1,11 @@
 <?php
 /**
- * One-time site setup, run the first time the theme is active:
- *  1. Creates the Home, Work, Features, Mail Club and Contact pages and sets Home as the front page.
- *  2. Once WooCommerce is active, creates the shop categories and starter products.
+ * Site setup, run when the theme is first active and again after a theme update:
+ *  1. Creates the Home, Work, Features, Mail Club, Contact and policy pages and sets Home as the front page.
+ *  2. Once WooCommerce is active, creates the shop categories and starter products (once only).
  *
- * Each step runs only once (tracked in options), so editing or deleting
- * the generated pages and products later is safe.
+ * After a theme update, a generated page is refreshed with the new design only
+ * if nobody has edited it yet. Edited pages are never overwritten.
  *
  * @package love-n
  */
@@ -18,7 +18,7 @@ function ln_maybe_setup() {
 	if ( wp_installing() ) {
 		return;
 	}
-	if ( ! get_option( 'ln_pages_done' ) && add_option( 'ln_pages_lock', time(), '', false ) ) {
+	if ( LOVE_N_VERSION !== get_option( 'ln_pages_done' ) && add_option( 'ln_pages_lock', time(), '', false ) ) {
 		ln_setup_pages();
 		update_option( 'ln_pages_done', LOVE_N_VERSION, false );
 		delete_option( 'ln_pages_lock' );
@@ -30,31 +30,67 @@ function ln_maybe_setup() {
 	}
 }
 
+/**
+ * Create a page, or refresh one the theme made earlier if it is still untouched.
+ */
 function ln_upsert_page( $slug, $title, $content ) {
 	$existing = get_page_by_path( $slug, OBJECT, 'page' );
-	if ( $existing ) {
-		return $existing->ID;
+	if ( ! $existing ) {
+		$id = wp_insert_post(
+			array(
+				'post_type'    => 'page',
+				'post_status'  => 'publish',
+				'post_name'    => $slug,
+				'post_title'   => $title,
+				'post_content' => wp_slash( $content ),
+			)
+		);
+		if ( $id && ! is_wp_error( $id ) ) {
+			update_post_meta( $id, '_ln_hash', md5( $content ) );
+		}
+		return $id;
 	}
-	return wp_insert_post(
-		array(
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-			'post_name'    => $slug,
-			'post_title'   => $title,
-			'post_content' => wp_slash( $content ),
-		)
-	);
+
+	$hash      = get_post_meta( $existing->ID, '_ln_hash', true );
+	$untouched = $hash
+		? md5( $existing->post_content ) === $hash
+		// Pages from theme 1.0 have no hash: treat them as untouched if never modified.
+		: $existing->post_modified_gmt === $existing->post_date_gmt;
+
+	if ( $untouched && md5( $content ) !== $hash ) {
+		wp_update_post(
+			array(
+				'ID'           => $existing->ID,
+				'post_content' => wp_slash( $content ),
+			)
+		);
+		update_post_meta( $existing->ID, '_ln_hash', md5( $content ) );
+	}
+	if ( 'publish' !== $existing->post_status && 'trash' !== $existing->post_status ) {
+		wp_update_post( array( 'ID' => $existing->ID, 'post_status' => 'publish' ) );
+	}
+	return $existing->ID;
 }
 
 function ln_setup_pages() {
-	update_option( 'blogname', 'Namitha Raveendranathan' );
-	update_option( 'blogdescription', 'Designer & digital artist · Love, N' );
+	if ( ! get_option( 'ln_pages_done' ) ) {
+		update_option( 'blogname', 'Namitha Raveendranathan' );
+		update_option( 'blogdescription', 'Designer & digital artist · Love, N' );
+	}
 
 	$home = ln_upsert_page( 'home', 'Home', ln_page_home() );
 	ln_upsert_page( 'work', 'Work', ln_page_work() );
 	ln_upsert_page( 'features', 'Features', ln_page_features() );
 	ln_upsert_page( 'mail-club', 'Love, N Art Mail Club', ln_page_mail_club() );
 	ln_upsert_page( 'contact', 'Contact', ln_page_contact() );
+	foreach ( array( 'shipping-policy' => 'Shipping policy', 'refund-policy' => 'Refund policy', 'terms-of-service' => 'Terms of service' ) as $slug => $t ) {
+		ln_upsert_page( $slug, $t, ln_page_policy( $t ) );
+	}
+	// WordPress makes a draft privacy policy on install; publish it so the footer link works.
+	$privacy = (int) get_option( 'wp_page_for_privacy_policy' );
+	if ( $privacy && 'draft' === get_post_status( $privacy ) ) {
+		wp_update_post( array( 'ID' => $privacy, 'post_status' => 'publish' ) );
+	}
 
 	if ( $home && ! is_wp_error( $home ) ) {
 		update_option( 'show_on_front', 'page' );

@@ -160,3 +160,31 @@ function ln_details( $summary, $answer ) {
 function ln_shortcode( $code ) {
 	return "<!-- wp:shortcode -->\n{$code}\n<!-- /wp:shortcode -->\n\n";
 }
+
+/** Full-width cover block with a looping background video (or image). */
+function ln_cover_video( $video, $inner, $class = '' ) {
+	$url   = esc_url( wp_make_link_relative( get_theme_file_uri( 'assets/video/' . $video ) ) );
+	$attrs = array(
+		'url'            => $url,
+		'dimRatio'       => 40,
+		'backgroundType' => 'video',
+		'minHeight'      => 88,
+		'minHeightUnit'  => 'vh',
+		'align'          => 'full',
+		'className'      => $class,
+		'layout'         => array( 'type' => 'constrained', 'contentSize' => '1240px' ),
+	);
+	$cls   = trim( 'wp-block-cover alignfull ' . $class );
+	return "<!-- wp:cover" . ln_attrs( $attrs ) . " -->\n<div class=\"{$cls}\" style=\"min-height:88vh\"><span aria-hidden=\"true\" class=\"wp-block-cover__background has-background-dim-40 has-background-dim\"></span><video class=\"wp-block-cover__video-background intrinsic-ignore\" autoplay muted loop playsinline src=\"{$url}\" data-object-fit=\"cover\"></video><div class=\"wp-block-cover__inner-container\">{$inner}</div></div>\n<!-- /wp:cover -->\n\n";
+}
+
+/** A captioned photo card: image + "Title →" link, like a collection tile. */
+function ln_photo_card( $file, $alt, $title, $url, $class = 'ln-tile', $sub = '' ) {
+	$link = '<a href="' . esc_url( $url ) . '">' . $title . '</a>';
+	return ln_group(
+		ln_image( $file, $alt, '', '', false )
+		. ln_p( $link, 'ln-arrow' )
+		. ( $sub ? ln_p( $sub, 'ln-card-sub' ) : '' ),
+		trim( 'ln-card-photo ' . $class )
+	);
+}
