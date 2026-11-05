@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.1.0
+Version: 1.1.2
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -116,7 +116,7 @@ img, video { height: auto; max-width: 100%; }
 	gap: 1rem;
 }
 .ln-header > * { margin: 0 !important; }
-.ln-header .wp-block-navigation { font-size: 0.98rem; letter-spacing: 0.06em; justify-self: start; }
+.ln-header .wp-block-navigation { font-size: 0.98rem; letter-spacing: 0.06em; justify-self: start; white-space: nowrap; }
 .ln-header .wp-block-navigation a { text-decoration: none; }
 .ln-header .wp-block-navigation a:hover,
 .ln-header .wp-block-navigation .current-menu-item > a { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
@@ -127,6 +127,13 @@ img, video { height: auto; max-width: 100%; }
 .ln-icons { justify-self: end; display: flex; align-items: center; gap: 1rem; }
 .wp-block-navigation__responsive-container.is-menu-open { background: var(--ln-blush) !important; }
 .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item { font-family: var(--wp--preset--font-family--heading); font-size: 1.75rem; }
+/* Medium screens: name centred on top, menu centred underneath. */
+@media (min-width: 600px) and (max-width: 1180px) {
+	.ln-header { grid-template-areas: ". brand icons" "nav nav nav"; row-gap: 0.75rem; }
+	.ln-header .wp-block-navigation { grid-area: nav; justify-self: center; }
+	.ln-brand { grid-area: brand; }
+	.ln-icons { grid-area: icons; }
+}
 @media (max-width: 599px) {
 	.ln-header { grid-template-columns: auto 1fr auto; }
 	.ln-brand { justify-self: center; }
@@ -136,7 +143,7 @@ img, video { height: auto; max-width: 100%; }
 .ln-hero.wp-block-cover {
 	min-height: min(88vh, 820px) !important;
 	padding: var(--ln-section) var(--ln-gutter) !important;
-	margin: 0 !important;
+	margin-block: 0 !important;
 	align-items: flex-end;
 	justify-content: flex-start;
 }
@@ -357,4 +364,11 @@ img, video { height: auto; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
 	html { scroll-behavior: auto; }
 	*, *::before, *::after { transition: none !important; }
+}
+
+/* Keep full-width sections edge to edge at every screen size. */
+.has-global-padding > .alignfull.ln-hero,
+.has-global-padding > .alignfull.ln-section {
+	margin-left: calc(var(--wp--style--root--padding-left) * -1) !important;
+	margin-right: calc(var(--wp--style--root--padding-right) * -1) !important;
 }
