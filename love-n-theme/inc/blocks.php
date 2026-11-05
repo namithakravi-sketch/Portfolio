@@ -90,8 +90,11 @@ function ln_buttons( array $buttons, $class = '' ) {
 /**
  * Group block. $tag is the HTML element; $full makes it edge to edge.
  */
-function ln_group( $inner, $class = '', $tag = 'div', $full = false, $content_size = '' ) {
+function ln_group( $inner, $class = '', $tag = 'div', $full = false, $content_size = '', $anchor = '' ) {
 	$attrs = array();
+	if ( $anchor ) {
+		$attrs['anchor'] = $anchor;
+	}
 	if ( 'div' !== $tag ) {
 		$attrs['tagName'] = $tag;
 	}
@@ -103,12 +106,13 @@ function ln_group( $inner, $class = '', $tag = 'div', $full = false, $content_si
 	}
 	$attrs['layout'] = $content_size ? array( 'type' => 'constrained', 'contentSize' => $content_size ) : array( 'type' => 'default' );
 	$cls             = trim( 'wp-block-group ' . ( $full ? 'alignfull ' : '' ) . $class );
-	return "<!-- wp:group" . ln_attrs( $attrs ) . " -->\n<{$tag} class=\"{$cls}\">{$inner}</{$tag}>\n<!-- /wp:group -->\n\n";
+	$id_attr         = $anchor ? ' id="' . esc_attr( $anchor ) . '"' : '';
+	return "<!-- wp:group" . ln_attrs( $attrs ) . " -->\n<{$tag}{$id_attr} class=\"{$cls}\">{$inner}</{$tag}>\n<!-- /wp:group -->\n\n";
 }
 
 /** A full-width page section with a 1320px content area. */
-function ln_section( $inner, $class = '' ) {
-	return ln_group( $inner, trim( 'ln-section ' . $class ), 'section', true, '1320px' );
+function ln_section( $inner, $class = '', $anchor = '' ) {
+	return ln_group( $inner, trim( 'ln-section ' . $class ), 'section', true, '1320px', $anchor );
 }
 
 /**

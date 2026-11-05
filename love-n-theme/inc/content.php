@@ -102,17 +102,18 @@ function ln_page_home() {
 }
 
 function ln_page_work() {
+	// Tabs: each button links to a panel id; assets/js/tabs.js shows one panel at a time.
 	$hero = ln_section(
 		ln_p( 'Portfolio', 'ln-kicker' )
 		. ln_heading( 'Selected <em class="ln-accent">works</em>', 1 )
-		. ln_p( 'Illustration, animation and branding projects, for clients and for the love of it. Tap any image to see it full size.', 'ln-lede' )
+		. ln_p( 'Artworks, animation and branding projects, for clients and for the love of it. Tap any image to see it full size.', 'ln-lede' )
 		. ln_buttons(
 			array(
-				array( 'Illustration', '#illustration', true ),
+				array( 'Artworks', '#artworks', true ),
 				array( 'Animation', '#animation', true ),
 				array( 'Branding', '#branding', true ),
 			),
-			'ln-jump'
+			'ln-tabs'
 		),
 		'ln-page-hero'
 	);
@@ -120,42 +121,27 @@ function ln_page_work() {
 	$meta = function ( $client, $role, $year ) {
 		return ln_p( "<strong>Client</strong>{$client}", 'ln-project-meta' ) . ln_p( "<strong>What I did</strong>{$role}", 'ln-project-meta' ) . ln_p( "<strong>Year</strong>{$year}", 'ln-project-meta' );
 	};
-	$anchor = function ( $id ) {
-		return "<!-- wp:html -->\n<span id=\"{$id}\"></span>\n<!-- /wp:html -->\n\n";
+	$head = function ( $title, $text ) {
+		return ln_columns( array( ln_heading( $title ), ln_p( $text, 'ln-lede' ) ), 'ln-section-head', 'bottom' );
 	};
 
-	$illustration = ln_section(
-		$anchor( 'illustration' )
-		. ln_columns(
-			array(
-				ln_p( '01', 'ln-kicker' ) . ln_heading( 'Illustration' ),
-				ln_p( 'Editorial pieces, book covers, personal series and everything in between: soft colour, small details and a lot of heart.', 'ln-lede' ),
-			),
-			'ln-section-head',
-			'bottom'
-		)
+	$artworks = ln_section(
+		$head( 'Artworks', 'Editorial pieces, book covers, personal series and everything in between: soft colour, small details and a lot of heart.' )
 		. ln_gallery(
 			array(
-				array( 'illustration-1.jpg', '[Describe this illustration]', '[Project title] · [Client or personal]' ),
-				array( 'illustration-2.jpg', '[Describe this illustration]', '[Project title] · [Client or personal]' ),
-				array( 'illustration-3.jpg', '[Describe this illustration]', '[Project title] · [Client or personal]' ),
-				array( 'illustration-4.jpg', '[Describe this illustration]', '[Project title] · [Client or personal]' ),
+				array( 'illustration-1.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
+				array( 'illustration-2.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
+				array( 'illustration-3.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
+				array( 'illustration-4.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
 			),
 			2
 		),
-		'ln-project ln-band--cream'
+		'ln-project ln-tab-panel ln-band--cream',
+		'artworks'
 	);
 
 	$animation = ln_section(
-		$anchor( 'animation' )
-		. ln_columns(
-			array(
-				ln_p( '02', 'ln-kicker' ) . ln_heading( 'Animation' ),
-				ln_p( 'Looping moments, explainer films and little moving stories that make people smile.', 'ln-lede' ),
-			),
-			'ln-section-head',
-			'bottom'
-		)
+		$head( 'Animation', 'Looping moments, explainer films and little moving stories that make people smile.' )
 		. ln_gallery(
 			array(
 				array( 'animation-1.jpg', '[Describe this animation still]', '[Film title] · [Client]' ),
@@ -165,19 +151,12 @@ function ln_page_work() {
 			3
 		)
 		. ln_p( 'To show a film here, paste its YouTube or Vimeo link on its own line in the editor and it becomes a video player.', 'ln-note' ),
-		'ln-project ln-band--forest'
+		'ln-project ln-tab-panel ln-band--cream',
+		'animation'
 	);
 
 	$branding = ln_section(
-		$anchor( 'branding' )
-		. ln_columns(
-			array(
-				ln_p( '03', 'ln-kicker' ) . ln_heading( 'Branding' ),
-				ln_p( 'Logos, illustrated identities and packaging for small businesses with big personalities.', 'ln-lede' ),
-			),
-			'ln-section-head',
-			'bottom'
-		)
+		$head( 'Branding', 'Logos, illustrated identities and packaging for small businesses with big personalities.' )
 		. ln_columns(
 			array(
 				array( ln_image( 'branding-1.jpg', '[Describe the main brand image]' ), '60%' ),
@@ -198,7 +177,8 @@ function ln_page_work() {
 			),
 			2
 		),
-		'ln-project'
+		'ln-project ln-tab-panel ln-band--cream',
+		'branding'
 	);
 
 	$cta = ln_section(
@@ -207,7 +187,7 @@ function ln_page_work() {
 		'ln-band--rose ln-center'
 	);
 
-	return $hero . $illustration . $animation . $branding . $cta;
+	return $hero . $artworks . $animation . $branding . $cta;
 }
 
 function ln_page_features() {
