@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.7.0
+Version: 1.7.3
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -400,12 +400,102 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .ln-club-product .ln-club-actions .wp-element-button { width: 100%; margin-top: 0; }
 .ln-club-product .ln-club-actions .ln-btn-outline { background: transparent; border: 1px solid var(--ln-ink); color: var(--ln-ink); }
 .ln-club-product .ln-club-actions .ln-btn-outline:hover { background: var(--ln-ink); color: var(--ln-cream); }
-/* Description under the buttons */
-.ln-club-about { margin-top: 2rem; }
-.ln-club-about p { margin: 0 0 1rem; }
-.ln-club-shipping { margin-top: 0.5rem; border-top: 1px solid var(--ln-line); }
-.ln-club-shipping ul { margin: 0.75rem 0; padding-left: 1.2rem; }
-.ln-club-shipping li + li { margin-top: 0.45rem; }
+/* ---------- Mail Club: letter, cut-off, envelope journey, stamps ---------- */
+.ln-club-about { margin-top: 2.5rem; }
+.ln-letter {
+	position: relative;
+	background:
+		repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.75em - 1px), rgba(46, 43, 39, 0.07) calc(1.75em - 1px), rgba(46, 43, 39, 0.07) 1.75em),
+		var(--ln-cream);
+	border: 1px solid var(--ln-line);
+	border-radius: 4px;
+	box-shadow: 0 14px 30px rgba(46, 43, 39, 0.08);
+	padding: 2.2rem 2rem 1.6rem;
+	line-height: 1.75;
+	transform: rotate(-0.6deg);
+}
+.ln-letter p { margin: 0 0 1em; }
+.ln-letter__dear { font-family: var(--wp--preset--font-family--accent); font-style: italic; font-size: 1.6rem; line-height: 1.2; margin-bottom: 0.6em !important; }
+.ln-letter__sign { font-family: var(--wp--preset--font-family--heading); font-size: 1.6rem; text-align: right; margin: 0.4em 0 0 !important; }
+.ln-letter__sign em { font-family: var(--wp--preset--font-family--accent); font-style: italic; font-size: 1.2em; color: var(--ln-terracotta); }
+.ln-letter__stamp {
+	position: absolute;
+	top: -14px;
+	right: 18px;
+	width: 64px;
+	height: 74px;
+	display: grid;
+	place-items: center;
+	align-content: center;
+	gap: 2px;
+	/* perforated edge: holes painted only in the border ring */
+	border: 6px solid transparent;
+	background:
+		linear-gradient(var(--ln-rose), var(--ln-rose)) padding-box,
+		radial-gradient(circle, var(--ln-cream) 2.6px, var(--ln-rose) 3px) -4px -4px / 8px 8px border-box;
+	color: var(--ln-terracotta);
+	transform: rotate(6deg);
+	box-shadow: 0 3px 8px rgba(46, 43, 39, 0.12);
+}
+.ln-letter__stamp span { font-size: 1.6rem; line-height: 1; }
+.ln-letter__stamp small { font-family: var(--wp--preset--font-family--heading); font-size: 0.7rem; color: var(--ln-ink); }
+
+.ln-cutoff { margin: 1.8rem 0 0 !important; display: flex; gap: 0.6rem; align-items: baseline; font-family: var(--wp--preset--font-family--heading); font-size: 1.15rem; }
+.ln-cutoff span { color: var(--ln-terracotta); }
+
+.ln-journey { margin-top: 2.2rem; }
+.ln-journey__title { font-size: 1.4rem !important; margin: 0 0 1.2rem !important; }
+.ln-journey__steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; position: relative; }
+.ln-journey__steps::before { /* the dotted mail route */
+	content: "";
+	position: absolute;
+	top: 28px;
+	left: 16%;
+	right: 16%;
+	border-top: 2px dashed var(--ln-terracotta);
+	opacity: 0.45;
+}
+.ln-journey__steps li { position: relative; text-align: center; display: grid; justify-items: center; gap: 0.25rem; font-size: 0.92rem; }
+.ln-journey__steps strong { font-family: var(--wp--preset--font-family--heading); font-weight: 400; font-size: 1.05rem; margin-top: 0.4rem; }
+.ln-journey__steps span:not(.ln-journey__icon) { opacity: 0.8; line-height: 1.4; }
+.ln-journey__icon { width: 58px; height: 58px; border-radius: 50%; background: var(--ln-blush); border: 1px solid var(--ln-line); display: grid; place-items: center; position: relative; z-index: 1; }
+.ln-journey__icon svg { width: 30px; height: 30px; fill: none; stroke: var(--ln-ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.ln-stamps { list-style: none; padding: 0; margin: 1.8rem 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.ln-stamp {
+	--stamp: var(--ln-rose);
+	/* perforated edge: holes (page colour) painted only in the border ring */
+	border: 8px solid transparent;
+	background:
+		linear-gradient(var(--stamp), var(--stamp)) padding-box,
+		radial-gradient(circle, var(--ln-blush) 3.2px, var(--stamp) 3.7px) -5px -5px / 10px 10px border-box;
+	padding: 0.8rem 0.9rem 0.75rem;
+	display: grid;
+	gap: 0.25rem;
+	font-size: 0.9rem;
+	line-height: 1.45;
+	transition: transform 0.25s var(--ln-ease);
+}
+.ln-stamp:nth-child(odd) { transform: rotate(-1deg); }
+.ln-stamp:nth-child(even) { transform: rotate(1deg); }
+.ln-stamp:hover { transform: rotate(0) translateY(-2px); }
+.ln-stamp strong { font-family: var(--wp--preset--font-family--heading); font-weight: 400; font-size: 1.05rem; }
+.ln-stamp--rose { --stamp: #F3DDD7; }
+.ln-stamp--sage { --stamp: #E3EAD9; }
+.ln-stamp--butter { --stamp: #FBEBC0; }
+.ln-stamp--sky { --stamp: #DCE7EE; }
+.ln-journey__note { font-size: 0.85rem; opacity: 0.7; margin: 1rem 0 0 !important; }
+@media (max-width: 480px) {
+	.ln-letter { padding: 2rem 1.3rem 1.4rem; transform: none; }
+	.ln-journey__steps { grid-template-columns: 1fr; gap: 1.1rem; }
+	/* icons down the left, route joining them, text beside */
+	.ln-journey__steps::before { top: 29px; bottom: 29px; left: 28px; right: auto; border-top: 0; border-left: 2px dashed var(--ln-terracotta); }
+	.ln-journey__steps li { grid-template-columns: 58px 1fr; grid-template-rows: auto auto; column-gap: 1rem; row-gap: 0.1rem; justify-items: start; text-align: left; align-items: center; }
+	.ln-journey__icon { grid-row: 1 / span 2; }
+	.ln-journey__steps strong { margin-top: 0; align-self: end; }
+	.ln-journey__steps span:not(.ln-journey__icon) { align-self: start; }
+	.ln-stamps { grid-template-columns: 1fr; }
+}
 .ln-plans-empty { border: 1px dashed currentColor; border-radius: var(--ln-radius); padding: 1.5rem; }
 
 .ln-steps { counter-reset: step; gap: clamp(16px, 2.5vw, 32px) !important; }

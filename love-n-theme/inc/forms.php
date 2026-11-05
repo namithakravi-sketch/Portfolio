@@ -420,22 +420,43 @@ add_shortcode(
 				</div>
 
 				<div class="ln-club-about">
-					<p><strong>Welcome to the Love, N Art Mail Club! 💌</strong></p>
-					<p>Somewhere between endless scrolling and notifications, I started missing the simple joy of real post: an envelope with your name on it, something you can hold, keep and pin to a wall. So I made a little club for it.</p>
-					<p>Every month I pack an envelope just for you, filled with original artworks, postcards, stickers and paper goodies, all illustrated and hand-packed by me in my studio, along with a little note about what I’ve been making, learning and dreaming up.</p>
-					<p>Subscribe before the end of each month to receive the next month’s mail.</p>
-					<details class="wp-block-details ln-club-shipping">
-						<summary>Shipping</summary>
-						<ul>
-							<li><strong>Zone:</strong> India and worldwide</li>
-							<li><strong>Service:</strong> India Post</li>
-							<li><strong>Postage:</strong> Included in the price, in India and abroad. Tracked (registered) post is available at checkout for a small extra charge.</li>
-							<li><strong>Delivery time:</strong> 3–10 days across India | 7–21 days abroad, depending on the destination country and customs.</li>
-							<li><strong>Lost mail:</strong> If your untracked mail hasn’t arrived within 4 weeks, get in touch and I’ll send you a new one.</li>
-							<li><strong>Customs:</strong> Prices don’t include any taxes or duties your local customs authority may charge.</li>
+					<article class="ln-letter" aria-label="A note from Namitha">
+						<span class="ln-letter__stamp" aria-hidden="true"><span>✿</span><small>Love, N</small></span>
+						<p class="ln-letter__dear">Dear friend,</p>
+						<p>Somewhere between endless scrolling and notifications, I started missing the simple joy of real post: an envelope with your name on it, something you can hold, keep and pin to a wall. So I made a little club for it.</p>
+						<p>Every month I pack an envelope just for you, filled with original artworks, postcards, stickers and paper goodies, all illustrated and hand-packed by me in my studio, along with a little note about what I’ve been making, learning and dreaming up.</p>
+						<p class="ln-letter__sign">Love, <em>N</em></p>
+					</article>
+
+					<p class="ln-cutoff"><span aria-hidden="true">✉</span> Subscribe by the last day of the month to catch the next month’s mailing.</p>
+
+					<section class="ln-journey" aria-labelledby="ln-journey-title">
+						<h3 id="ln-journey-title" class="ln-journey__title">How your envelope travels</h3>
+						<ol class="ln-journey__steps">
+							<li>
+								<span class="ln-journey__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 11h22v15H5z"/><path d="M5 11l11 8 11-8"/><path d="M16 9.5c-1.6-2.4-5-1.4-4.4 1 .4 1.6 2.6 3 4.4 4 1.8-1 4-2.4 4.4-4 .6-2.4-2.8-3.4-4.4-1z"/></svg></span>
+								<strong>Hand-packed</strong>
+								<span>in the studio, every month</span>
+							</li>
+							<li>
+								<span class="ln-journey__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M9 28V14a7 7 0 0 1 14 0v14z"/><path d="M12 18h8"/><path d="M16 28v-4"/><path d="M23 9l4-2v5l-4-1"/></svg></span>
+								<strong>Posted by India Post</strong>
+								<span>postage already included</span>
+							</li>
+							<li>
+								<span class="ln-journey__icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 15L16 6l11 9"/><path d="M8 13v14h16V13"/><path d="M13 27v-7h6v7"/></svg></span>
+								<strong>In your letterbox</strong>
+								<span>3–10 days in India · 7–21 days abroad</span>
+							</li>
+						</ol>
+						<ul class="ln-stamps">
+							<li class="ln-stamp ln-stamp--rose"><strong>Tracked post</strong><span>Optional, for a small extra charge at checkout.</span></li>
+							<li class="ln-stamp ln-stamp--sage"><strong>Lost on the way?</strong><span>Untracked mail not there in 4 weeks? I’ll send a new one.</span></li>
+							<li class="ln-stamp ln-stamp--butter"><strong>Customs</strong><span>Any local taxes or duties aren’t included in the price.</span></li>
+							<li class="ln-stamp ln-stamp--sky"><strong>Paid in ₹</strong><span>Payments are processed in Indian rupees.</span></li>
 						</ul>
-						<p>Payment is processed in Indian rupees (₹).</p>
-					</details>
+						<p class="ln-journey__note">Times depend on the destination country and customs.</p>
+					</section>
 					<a class="ln-club-product__more ln-arrow" href="#how-it-works">How it works</a>
 				</div>
 			</form>
