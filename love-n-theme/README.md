@@ -25,3 +25,7 @@ Products are created once. After a theme update, a generated page is refreshed w
 - Mail Club plan picker (photo, plan pills and a Join button; plans are products in the "Art Mail Club" category, named like `Mail Club · 3 months`): `[ln_mail_club_plans]`
 
 Messages and sign-ups are emailed to the site admin and also saved under **Love, N** in the WordPress admin, where subscribers can be exported as a CSV.
+
+## Cart drawer and local prices
+- The header cart icon opens a cart drawer built by the theme (`inc/cart.php`, `assets/js/cart-drawer.js`). It uses the WooCommerce Store API, so it works while the store is in "coming soon" mode (WooCommerce's own mini-cart block is hidden in that mode).
+- On the Mail Club page, International plans also show an approximate price in the visitor's currency (guessed from their device's time zone; they can change it). Payment is still in INR. Rates come from open.er-api.com (fallback: frankfurter.app), refreshed every 12 hours. If neither can be reached and no earlier rates are saved, the approximate line is simply not shown.

@@ -7,10 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOVE_N_VERSION', '1.7.10' );
+define( 'LOVE_N_VERSION', '1.8.0' );
 
 require_once get_theme_file_path( 'inc/blocks.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
+require_once get_theme_file_path( 'inc/cart.php' );
 require_once get_theme_file_path( 'inc/content.php' );
 require_once get_theme_file_path( 'inc/setup.php' );
 
@@ -90,37 +91,7 @@ add_filter(
 	2
 );
 
-/*
- * While WooCommerce's "coming soon" mode hides the store from visitors, it also
- * removes the cart icon from the header. Show a plain cart icon in its place so
- * the header looks the same for everyone; it links to the cart page.
- */
-function ln_cart_fallback_icon() {
-	$url = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/cart/' );
-	return '<a class="ln-cart-fallback" href="' . esc_url( $url ) . '" aria-label="' . esc_attr__( 'Cart', 'love-n' ) . '">'
-		. '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'
-		. '<path d="M4 6h3.5l3 14h13.5l3-10H9.2"/><circle cx="12.5" cy="25" r="1.6"/><circle cx="22.5" cy="25" r="1.6"/></svg></a>';
-}
-add_filter(
-	'render_block_woocommerce/mini-cart',
-	function ( $html ) {
-		return '' === trim( (string) $html ) ? ln_cart_fallback_icon() : $html;
-	},
-	PHP_INT_MAX
-);
-add_filter(
-	'render_block_core/group',
-	function ( $html, $block ) {
-		// If WooCommerce skipped the cart block entirely, add the icon to the header icons group.
-		$class = $block['attrs']['className'] ?? '';
-		if ( false !== strpos( $class, 'ln-icons' ) && false === strpos( $html, 'wc-block-mini-cart' ) && false === strpos( $html, 'ln-cart-fallback' ) ) {
-			$html = preg_replace( '#</div>\s*$#', ln_cart_fallback_icon() . '</div>', $html, 1 );
-		}
-		return $html;
-	},
-	PHP_INT_MAX,
-	2
-);
+/* Header cart icon and cart drawer: see inc/cart.php. */
 
 /* "← Back" link under the header on every page except the home page. */
 add_filter(

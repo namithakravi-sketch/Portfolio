@@ -377,6 +377,10 @@ add_shortcode(
 			<form class="ln-club-product__info" method="get" action="<?php echo esc_url( wc_get_checkout_url() ); ?>">
 				<h1 class="ln-club-product__title"><?php echo esc_html( $title ); ?></h1>
 				<p class="ln-club-product__price" data-ln-price><?php echo wp_kses_post( $first->get_price_html() ); ?></p>
+				<p class="ln-club-product__fx" data-ln-fx hidden>
+					<span data-ln-fx-amount></span> <span class="ln-club-product__fx-note">approximate · you’ll pay in ₹</span>
+					<select class="ln-club-product__fx-pick" data-ln-fx-select aria-label="Show prices in"></select>
+				</p>
 				<p class="ln-club-product__small">Postage included in India and worldwide · Tracked post available at checkout · No automatic renewals.</p>
 				<p class="ln-club-product__hint">Choose your location to see subscription plans and shipping-inclusive prices.</p>
 
@@ -402,6 +406,7 @@ add_shortcode(
 							<label class="ln-pill">
 								<input type="radio" name="add-to-cart" value="<?php echo esc_attr( $p->get_id() ); ?>" <?php checked( true, 1 === $i && 0 === $j ); ?>
 									data-price="<?php echo esc_attr( wp_strip_all_tags( wc_price( $p->get_price() ) ) ); ?>"
+									data-inr="<?php echo esc_attr( (float) $p->get_price() ); ?>"
 									data-desc="<?php echo esc_attr( wp_strip_all_tags( $p->get_short_description() ) ); ?>">
 								<span><?php echo esc_html( $label( $p ) ); ?></span>
 							</label>
@@ -472,10 +477,30 @@ add_shortcode(
 			</form>
 		</div>
 		<script>
+		// Runs after the footer scripts (currency and cart drawer) have loaded.
+		document.addEventListener('DOMContentLoaded', function () {
 		document.querySelectorAll('.ln-club-product__info').forEach(function (f) {
+			var fxBox = f.querySelector('[data-ln-fx]');
+			var fxSelect = f.querySelector('[data-ln-fx-select]');
+			if (fxSelect && window.lnFx) {
+				window.lnFx.fillSelect(fxSelect);
+				fxSelect.addEventListener('change', function () { window.lnFx.set(fxSelect.value); });
+				window.lnFx.onChange(function () { fx(); });
+			}
+			// Approximate local-currency amount, shown for international plans only.
+			function fx() {
+				if (!fxBox) return;
+				var pick = f.querySelector('input[name="add-to-cart"]:checked');
+				var set = pick && pick.closest('.ln-plan-set');
+				var text = window.lnFx && pick && set && set.dataset.region === 'international' ? window.lnFx.format(parseFloat(pick.dataset.inr)) : '';
+				f.querySelector('[data-ln-fx-amount]').textContent = text;
+				if (fxSelect && window.lnFx) fxSelect.value = window.lnFx.currency;
+				fxBox.hidden = !text;
+			}
 			function show(r) {
 				f.querySelector('[data-ln-price]').textContent = r.dataset.price;
 				f.querySelector('[data-ln-desc]').textContent = r.dataset.desc;
+				fx();
 			}
 			function setRegion(region) {
 				f.querySelectorAll('.ln-plan-set').forEach(function (s) {
@@ -503,27 +528,14 @@ add_shortcode(
 			var addBtn = f.querySelector('.ln-btn-outline');
 			if (addBtn && window.fetch) {
 				addBtn.addEventListener('click', function (e) {
-					var mini = document.querySelector('.wc-block-mini-cart');
 					var pick = f.querySelector('input[name="add-to-cart"]:checked');
-					if (!mini || !pick) return; // no drawer available: fall back to the cart page
+					if (!window.lnCart || !pick) return; // no drawer available: fall back to the cart page
 					e.preventDefault();
 					var label = addBtn.textContent;
 					addBtn.disabled = true;
 					addBtn.textContent = 'Adding…';
-					var qtyVal = Math.max(1, parseInt(qty.value, 10) || 1);
-					fetch('/wp-json/wc/store/v1/cart', { credentials: 'same-origin' })
-						.then(function (r) { return r.headers.get('Nonce'); })
-						.then(function (nonce) {
-							return fetch('/wp-json/wc/store/v1/cart/add-item', {
-								method: 'POST',
-								credentials: 'same-origin',
-								headers: { 'Content-Type': 'application/json', 'Nonce': nonce },
-								body: JSON.stringify({ id: parseInt(pick.value, 10), quantity: qtyVal })
-							});
-						})
-						.then(function (r) { if (!r.ok) throw new Error('add failed'); return r.json(); })
+					window.lnCart.add(parseInt(pick.value, 10), Math.max(1, parseInt(qty.value, 10) || 1))
 						.then(function () {
-							document.body.dispatchEvent(new CustomEvent('wc-blocks_added_to_cart', { bubbles: true, cancelable: true }));
 							addBtn.textContent = 'Added ✓';
 							setTimeout(function () { addBtn.textContent = label; addBtn.disabled = false; }, 1600);
 						})
@@ -544,6 +556,8 @@ add_shortcode(
 			try { saved = localStorage.getItem('lnClubRegion'); } catch (e) {}
 			var savedInput = saved && f.querySelector('input[name="ln_region"][value="' + saved + '"]');
 			if (savedInput) { savedInput.checked = true; setRegion(saved); }
+			fx();
+		});
 		});
 		</script>
 		<?php
