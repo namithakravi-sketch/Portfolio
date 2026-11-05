@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOVE_N_VERSION', '1.3.2' );
+define( 'LOVE_N_VERSION', '1.3.4' );
 
 require_once get_theme_file_path( 'inc/blocks.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
@@ -72,3 +72,17 @@ remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 remove_action( 'wp_print_styles', 'print_emoji_styles' );
 remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
 remove_action( 'admin_print_styles', 'print_emoji_styles' );
+
+/* Pages that don't show the "Letters from the studio" sign-up band. */
+add_filter(
+	'render_block_core/group',
+	function ( $html, $block ) {
+		$class = $block['attrs']['className'] ?? '';
+		if ( false !== strpos( $class, 'ln-signup-band' ) && is_page( array( 'work' ) ) ) {
+			return '';
+		}
+		return $html;
+	},
+	10,
+	2
+);
