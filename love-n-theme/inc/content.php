@@ -105,7 +105,7 @@ function ln_page_work() {
 	// Tabs: each button links to a panel id; assets/js/tabs.js shows one panel at a time.
 	$hero = ln_section(
 		ln_p( 'Portfolio', 'ln-kicker' )
-		. ln_heading( 'Selected <em class="ln-accent">works</em>', 1 )
+		. ln_heading( 'The creative <em class="ln-accent">collection</em>', 1 )
 		. ln_p( 'Artworks, animation and branding projects, for clients and for the love of it.', 'ln-lede' )
 		. ln_buttons(
 			array(
