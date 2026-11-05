@@ -389,3 +389,29 @@ add_shortcode(
 		return ob_get_clean();
 	}
 );
+
+/* ---------- [ln_instagram url="https://instagram.com/handle"] ----------
+ * Shows the latest posts from the Smash Balloon "Instagram Feed" plugin once
+ * an account is connected there. Until then it shows six placeholder tiles
+ * that link to the Instagram profile.
+ */
+add_shortcode(
+	'ln_instagram',
+	function ( $atts ) {
+		$a = shortcode_atts( array( 'url' => '#' ), $atts );
+		if ( shortcode_exists( 'instagram-feed' ) ) {
+			$feed = do_shortcode( '[instagram-feed num=6 cols=6 colsmobile=3 colstablet=3 imagepadding=6 imagepaddingunit=px showheader=false showbutton=false showfollow=false]' );
+			if ( false !== strpos( $feed, 'sbi_item' ) ) {
+				return '<div class="ln-insta ln-insta--live">' . $feed . '</div>';
+			}
+		}
+		$tiles = array( 'illustration-1.jpg', 'shop-postcards.jpg', 'illustration-3.jpg', 'shop-stickers.jpg', 'illustration-2.jpg', 'shop-bookmarks.jpg' );
+		$out   = '<div class="ln-insta">';
+		foreach ( $tiles as $t ) {
+			$out .= '<a class="ln-insta__tile" href="' . esc_url( $a['url'] ) . '" target="_blank" rel="noopener" aria-label="View on Instagram">'
+				. '<img src="' . esc_url( ln_img_url( $t ) ) . '" alt="" loading="lazy">'
+				. '<span class="ln-insta__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg></span></a>';
+		}
+		return $out . '</div>';
+	}
+);

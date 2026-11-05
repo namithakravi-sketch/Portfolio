@@ -98,7 +98,15 @@ function ln_page_home() {
 		'ln-band--cream'
 	);
 
-	return $hero . $club . $shop . $work . $about . $features;
+	// 7. Instagram strip (latest posts once the Instagram Feed plugin is connected).
+	$insta = ln_section(
+		ln_group( ln_p( 'Instagram', 'ln-kicker' ) . ln_heading( 'Follow along <em class="ln-accent">on Instagram</em>' ) . ln_p( 'Sketches, works in progress and little studio moments.', 'ln-lede' ), 'ln-section-head ln-center' )
+		. ln_shortcode( '[ln_instagram url="#"]' )
+		. ln_group( ln_buttons( array( array( 'Follow on Instagram', '#', true ) ) ), 'ln-center' ),
+		'ln-band--cream ln-insta-section'
+	);
+
+	return $hero . $club . $shop . $work . $about . $features . $insta;
 }
 
 function ln_page_work() {
