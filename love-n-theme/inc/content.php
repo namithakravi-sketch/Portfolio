@@ -26,11 +26,11 @@ function ln_page_home() {
 				ln_image( 'shop-mail-club.jpg', 'What arrives in a Love, N Art Mail Club envelope', '', '', false ),
 				ln_p( 'Love, N Art Mail Club 💌', 'ln-kicker' )
 				. ln_heading( 'Happy mail, <em class="ln-accent">every month</em>' )
-				. ln_p( 'A hand-packed envelope of brand-new art, made only for club members and posted to your door.', 'ln-lede' )
+				. ln_p( 'A happy little surprise waiting for you every month! A hand-packed envelope filled with colourful illustrations, postcards, stickers, and paper goodies, all made with a little extra love.', 'ln-lede' )
 				. "<!-- wp:list {\"className\":\"ln-ticks\"} -->\n<ul class=\"wp-block-list ln-ticks\">"
-				. "<!-- wp:list-item -->\n<li>An exclusive print you won’t find in the shop</li>\n<!-- /wp:list-item -->\n\n"
-				. "<!-- wp:list-item -->\n<li>Stickers, postcards and little paper surprises</li>\n<!-- /wp:list-item -->\n\n"
-				. "<!-- wp:list-item -->\n<li>3-month, 6-month and 1-year plans</li>\n<!-- /wp:list-item -->\n\n"
+				. "<!-- wp:list-item -->\n<li>A monthly selection of original artworks and postcards</li>\n<!-- /wp:list-item -->\n\n"
+				. "<!-- wp:list-item -->\n<li>Stickers, bookmarks and other little paper surprises to collect, share or gift</li>\n<!-- /wp:list-item -->\n\n"
+				. "<!-- wp:list-item -->\n<li>1-month, 3-month and 6-month subscriptions</li>\n<!-- /wp:list-item -->\n\n"
 				. "</ul>\n<!-- /wp:list -->\n\n"
 				. ln_buttons( array( array( 'View details', '/mail-club/' ) ) ),
 			),
