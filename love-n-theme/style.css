@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.14.2
+Version: 1.14.3
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -346,6 +346,21 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 		width: calc((100% - var(--wp--style--unstable-gallery-gap, 16px) * 2) / 3) !important;
 		flex-grow: 0 !important;
 	}
+}
+/* Every tile in a tab is the same size: one shape per tab, images cropped to fill it.
+   Artworks are portrait (4:5), animation stills widescreen (16:9), branding 4:3. */
+.ln-tab-panel .wp-block-gallery.has-nested-images figure.wp-block-image:not(#individual-image) {
+	align-self: flex-start;
+	--ln-tile: 4 / 5;
+}
+#animation .wp-block-gallery.has-nested-images figure.wp-block-image:not(#individual-image) { --ln-tile: 16 / 9; }
+#branding .wp-block-gallery.has-nested-images figure.wp-block-image:not(#individual-image) { --ln-tile: 4 / 3; }
+.ln-tab-panel .wp-block-gallery.has-nested-images figure.wp-block-image:not(#individual-image) img {
+	aspect-ratio: var(--ln-tile) !important;
+	width: 100% !important;
+	height: auto !important;
+	flex: none !important;
+	object-fit: cover !important;
 }
 /* Section descriptions sit flush with the right edge of the images below. */
 @media (min-width: 782px) {
