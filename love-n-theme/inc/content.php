@@ -9,6 +9,19 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/** "Featured in" magazine covers (home page; the About page shows it without the link). */
+function ln_features_section( $with_link = true ) {
+	$mags = '';
+	foreach ( array( 1, 2, 3, 4 ) as $n ) {
+		$mags .= ln_group( ln_image( "magazine-{$n}.jpg", '[Magazine name] cover', '', '', false ) . ln_heading( '[Magazine name]', 3 ) . ln_p( '[Issue · Year]' ), 'ln-mag' );
+	}
+	return ln_section(
+		ln_group( ln_p( 'As seen in', 'ln-kicker' ) . ln_heading( 'Featured in' ), 'ln-section-head ln-center' )
+		. ln_group( $mags, 'ln-mags' )
+		. ( $with_link ? ln_group( ln_p( '<a href="/features/">See all features</a>', 'ln-arrow' ), 'ln-center' ) : '' )
+	);
+}
+
 function ln_page_home() {
 	// 1. Hero video with "View works".
 	$hero = ln_cover_video(
@@ -70,15 +83,7 @@ function ln_page_home() {
 		'ln-band--sage'
 	);
 
-	$mags = '';
-	foreach ( array( 1, 2, 3, 4 ) as $n ) {
-		$mags .= ln_group( ln_image( "magazine-{$n}.jpg", '[Magazine name] cover', '', '', false ) . ln_heading( '[Magazine name]', 3 ) . ln_p( '[Issue · Year]' ), 'ln-mag' );
-	}
-	$features = ln_section(
-		ln_group( ln_p( 'As seen in', 'ln-kicker' ) . ln_heading( 'Featured in' ), 'ln-section-head ln-center' )
-		. ln_group( $mags, 'ln-mags' )
-		. ln_group( ln_p( '<a href="/features/">See all features</a>', 'ln-arrow' ), 'ln-center' )
-	);
+	$features = ln_features_section( true );
 
 	$about = ln_section(
 		ln_columns(
@@ -355,17 +360,26 @@ function ln_page_about() {
 		'ln-band--sage'
 	);
 
-	$press = ln_section(
-		ln_columns(
-			array(
-				ln_heading( 'As seen <em class="ln-accent">in print</em>' ) . ln_p( 'Magazines and publications that have shared my work.' ),
-				ln_buttons( array( array( 'See the features', '/features/' ), array( 'Contact me', '/contact/', true ) ) ),
-			),
-			'',
-			'center'
-		),
-		'ln-band--cream'
-	);
+	$press = ln_features_section( false );
 
 	return $intro . $what . $press;
 }
+
+/*
+ * About page: the old "As seen in print" band (heading plus two buttons) shows
+ * the "Featured in" magazine covers instead. Only the untouched original band
+ * is swapped, so an edited About page is otherwise left exactly as it is.
+ */
+add_filter(
+	'render_block_core/group',
+	function ( $html, $block ) {
+		if ( false === strpos( $block['attrs']['className'] ?? '', 'ln-section' )
+			|| false === strpos( $html, 'in print</em>' )
+			|| false === strpos( $html, 'See the features' ) ) {
+			return $html;
+		}
+		return do_blocks( ln_features_section( false ) );
+	},
+	10,
+	2
+);
