@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.14.3
+Version: 1.14.4
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -347,6 +347,30 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 		flex-grow: 0 !important;
 	}
 }
+/* Animation grid: like the galleries, but each tile can be an image, a video or a YouTube/Vimeo embed.
+   3 to a row (2 on phones), every tile 16:9. */
+.ln-media-grid {
+	display: grid !important;
+	grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	gap: clamp(12px, 2vw, 22px) !important;
+	align-items: start;
+}
+@media (min-width: 600px) { .ln-media-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; } }
+.ln-media-grid > * { margin: 0 !important; min-width: 0; max-width: none !important; width: auto !important; }
+.ln-media-grid .wp-block-image img,
+.ln-media-grid .wp-block-video video,
+.ln-media-grid .wp-block-embed iframe {
+	display: block;
+	width: 100% !important;
+	height: auto !important;
+	aspect-ratio: 16 / 9 !important;
+	object-fit: cover;
+	border-radius: var(--ln-radius);
+	background: var(--ln-ink);
+}
+.ln-media-grid .wp-block-embed__wrapper::before { display: none !important; } /* WordPress's own ratio box; the iframe sets the ratio */
+.ln-media-grid .wp-block-embed iframe { position: static !important; border: 0 !important; box-sizing: border-box; }
+.ln-media-grid figcaption { margin: 0 !important; padding: 0.6rem 0 0 !important; text-align: left !important; font-size: 0.95rem; }
 /* Every tile in a tab is the same size: one shape per tab, images cropped to fill it.
    Artworks are portrait (4:5), animation stills widescreen (16:9), branding 4:3. */
 .ln-tab-panel .wp-block-gallery.has-nested-images figure.wp-block-image:not(#individual-image) {

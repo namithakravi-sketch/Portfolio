@@ -342,3 +342,60 @@ function ln_fill_tab_gallery( array &$section, array $ph, $total ) {
 	}
 	return $changed;
 }
+
+/**
+ * One-time fix (1.14.4): the Animation tab held an image gallery, which can't
+ * take videos or YouTube/Vimeo links. Turn that gallery into a 3-column grid
+ * (Group block, grid layout) with the same images, so a film can be added as
+ * its own tile, and update the note below it. Runs once; the previous
+ * version stays in the page's Revisions.
+ */
+add_action( 'init', 'ln_animation_gallery_to_grid', 101 );
+
+function ln_animation_gallery_to_grid() {
+	if ( wp_installing() || get_option( 'ln_animation_grid_done' ) || ! add_option( 'ln_animation_grid_lock', time(), '', false ) ) {
+		return;
+	}
+	$page = get_page_by_path( 'work', OBJECT, 'page' );
+	if ( $page ) {
+		$blocks  = parse_blocks( $page->post_content );
+		$changed = false;
+		foreach ( $blocks as &$section ) {
+			if ( 'core/group' !== $section['blockName'] || 'animation' !== ( $section['attrs']['anchor'] ?? '' ) ) {
+				continue;
+			}
+			foreach ( $section['innerBlocks'] as &$block ) {
+				if ( 'core/gallery' === $block['blockName'] && ! $changed ) {
+					// Same image blocks, now inside a grid instead of a gallery.
+					$block['blockName'] = 'core/group';
+					$block['attrs']     = array(
+						'className' => 'ln-media-grid',
+						'layout'    => array( 'type' => 'grid', 'columnCount' => 3 ),
+					);
+					$block['innerContent'][0]                                   = '<div class="wp-block-group ln-media-grid">';
+					$block['innerContent'][ count( $block['innerContent'] ) - 1 ] = '</div>';
+					$changed = true;
+				} elseif ( 'core/paragraph' === $block['blockName'] && false !== strpos( $block['innerHTML'], 'To show a film here' ) ) {
+					$html                  = '<p class="ln-note">' . LN_ANIMATION_NOTE . '</p>';
+					$block['innerHTML']    = "\n{$html}\n";
+					$block['innerContent'] = array( "\n{$html}\n" );
+				}
+			}
+			unset( $block );
+			break;
+		}
+		unset( $section );
+		if ( $changed ) {
+			$kses = has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+			if ( $kses ) {
+				kses_remove_filters();
+			}
+			wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( serialize_blocks( $blocks ) ) ) );
+			if ( $kses ) {
+				kses_init_filters();
+			}
+		}
+	}
+	update_option( 'ln_animation_grid_done', LOVE_N_VERSION, false );
+	delete_option( 'ln_animation_grid_lock' );
+}

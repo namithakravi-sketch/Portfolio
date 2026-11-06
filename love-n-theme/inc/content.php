@@ -114,6 +114,19 @@ function ln_page_home() {
 	return $hero . $club . $shop . $work . $about . $features . $insta;
 }
 
+/** Shown under the Animation grid. */
+define( 'LN_ANIMATION_NOTE', 'To add a film, add a YouTube, Vimeo or Video block to this grid, then delete one of the placeholder stills.' );
+
+/** Placeholder stills for the Animation grid, numbered $from to $to - 1. */
+function ln_animation_placeholders( $from, $to ) {
+	$files = array( 'animation-1.jpg', 'animation-2.jpg', 'animation-3.jpg' );
+	$items = array();
+	for ( $i = $from; $i < $to; $i++ ) {
+		$items[] = array( $files[ $i % 3 ], '[Describe this animation still]', '[Film title] · [Client]' );
+	}
+	return $items;
+}
+
 function ln_page_work() {
 	// Tabs: each button links to a panel id; assets/js/tabs.js shows one panel at a time.
 	$hero = ln_section(
@@ -155,8 +168,8 @@ function ln_page_work() {
 
 	$animation = ln_section(
 		$head( 'Animation', 'Looping moments and little moving stories.' )
-		. $works( array( 'animation-1.jpg', 'animation-2.jpg', 'animation-3.jpg' ), '[Describe this animation still]', '[Film title] · [Client]' )
-		. ln_p( 'To show a film here, paste its YouTube or Vimeo link on its own line in the editor and it becomes a video player.', 'ln-note' ),
+		. ln_media_grid( ln_animation_placeholders( 0, 18 ) )
+		. ln_p( LN_ANIMATION_NOTE, 'ln-note' ),
 		'ln-project ln-tab-panel ln-band--cream',
 		'animation'
 	);

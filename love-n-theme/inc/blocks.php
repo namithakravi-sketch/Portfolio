@@ -71,6 +71,24 @@ function ln_gallery( array $items, $columns = 3, $class = 'ln-gallery' ) {
 }
 
 /**
+ * A 3-column grid (Group block, grid layout) for media that a gallery can't
+ * hold: each tile can be an Image, Video, or YouTube/Vimeo embed block.
+ *
+ * @param array $items Each: array( file, alt, caption ) for a placeholder image.
+ */
+function ln_media_grid( array $items, $class = 'ln-media-grid' ) {
+	$inner = '';
+	foreach ( $items as $it ) {
+		$inner .= ln_image( $it[0], $it[1], '', $it[2] ?? '', true );
+	}
+	$attrs = array(
+		'className' => $class,
+		'layout'    => array( 'type' => 'grid', 'columnCount' => 3 ),
+	);
+	return "<!-- wp:group" . ln_attrs( $attrs ) . " -->\n<div class=\"wp-block-group {$class}\">{$inner}</div>\n<!-- /wp:group -->\n\n";
+}
+
+/**
  * @param array $buttons Each: array( label, url, outline? ).
  */
 function ln_buttons( array $buttons, $class = '' ) {
