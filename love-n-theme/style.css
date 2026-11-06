@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.9.0
+Version: 1.10.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -316,6 +316,10 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 	box-sizing: border-box;
 }
 
+/* Heading and intro share the heading's width (Shop page hero). */
+.ln-fit { width: fit-content; max-width: 100% !important; margin-left: 0 !important; }
+.ln-fit > .ln-lede { width: 0; min-width: 100%; max-width: none !important; padding-right: 0 !important; }
+
 /* ---------- Tabs (Work page) ---------- */
 .ln-tabs { gap: 0.6rem !important; }
 .ln-tabs .wp-block-button.is-active .wp-block-button__link {
@@ -410,6 +414,17 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .ln-club-product .ln-club-actions .wp-element-button { width: 100%; margin-top: 0; }
 .ln-club-product .ln-club-actions .ln-btn-outline { background: transparent; border: 1px solid var(--ln-ink); color: var(--ln-ink); }
 .ln-club-product .ln-club-actions .ln-btn-outline:hover { background: var(--ln-ink); color: var(--ln-cream); }
+/* ---------- Product page (same layout as the Mail Club page) ---------- */
+.ln-product-page { padding-top: clamp(24px, 4vw, 56px) !important; }
+.ln-product .ln-plan-desc { min-height: 0; }
+.ln-product .ln-plan-desc p { margin: 0; }
+.ln-product-desc { margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--ln-line); line-height: 1.75; }
+.ln-product-desc__title { font-size: 1.4rem !important; margin: 0 0 1rem !important; }
+.ln-product-desc p { margin: 0 0 1em; }
+.ln-product-desc strong { font-weight: 600; }
+.ln-related { margin-top: clamp(48px, 7vw, 96px); padding-top: clamp(32px, 4vw, 56px); border-top: 1px solid var(--ln-line); }
+.ln-related .related.products > h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); margin: 0 0 1.75rem; }
+
 /* ---------- Mail Club: letter, cut-off, envelope journey, stamps ---------- */
 .ln-club-about { margin-top: 2.5rem; }
 .ln-letter {
@@ -574,6 +589,16 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .wc-block-components-product-price, .woocommerce .price { letter-spacing: 0.05em; }
 .woocommerce span.onsale, .wc-block-components-product-sale-badge { background: var(--ln-butter); color: var(--ln-ink); border: 0; border-radius: 999px; }
 .wc-block-components-button:not(.is-link), .woocommerce button.button.alt, .woocommerce a.button.alt { background: var(--ln-butter) !important; color: var(--ln-ink) !important; border-radius: 999px !important; }
+/* Shop cards: Add to cart is an outline button, as on the Mail Club page */
+.woocommerce ul.products li.product .button {
+	background: transparent !important; color: var(--ln-ink) !important;
+	border: 1px solid var(--ln-ink) !important; border-radius: 999px !important;
+	box-shadow: none !important; font-weight: 400; letter-spacing: 0.06em; padding: 0.85em 1.8em;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+.woocommerce ul.products li.product .button:hover,
+.woocommerce ul.products li.product .button:focus-visible { background: var(--ln-ink) !important; color: var(--ln-cream) !important; }
+.woocommerce ul.products li.product .added_to_cart { display: none; } /* the cart drawer opens instead */
 
 /* ---------- Buttons: hover, focus and press feedback ---------- */
 .wp-element-button,

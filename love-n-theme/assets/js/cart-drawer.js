@@ -233,6 +233,34 @@
 
 	window.lnCart = { open: open, close: close, add: add, refresh: load };
 
+	// Product pages: quantity stepper and "Add to cart" without leaving the page.
+	document.querySelectorAll('.ln-product-form').forEach(function (f) {
+		var qty = f.querySelector('input[name="quantity"]');
+		f.querySelectorAll('.ln-qty__btn').forEach(function (b) {
+			b.addEventListener('click', function () {
+				var v = (parseInt(qty.value, 10) || 1) + parseInt(b.dataset.step, 10);
+				qty.value = Math.min(parseInt(qty.max, 10) || 99, Math.max(1, v));
+			});
+		});
+		var btn = f.querySelector('[data-ln-add]');
+		if (!btn || !drawer) return;
+		btn.addEventListener('click', function (e) {
+			e.preventDefault();
+			var label = btn.textContent;
+			btn.disabled = true;
+			btn.textContent = 'Adding…';
+			add(parseInt(btn.dataset.lnAdd, 10), Math.max(1, parseInt(qty.value, 10) || 1)).then(function () {
+				btn.textContent = 'Added ✓';
+				setTimeout(function () { btn.textContent = label; btn.disabled = false; }, 1600);
+			}, function () {
+				btn.disabled = false;
+				btn.textContent = label;
+				f.action = btn.getAttribute('formaction');
+				f.submit();
+			});
+		});
+	});
+
 	document.addEventListener('click', function (e) {
 		var opener = e.target.closest('[data-ln-cart-open]');
 		if (opener && drawer) { e.preventDefault(); open(); return; }
