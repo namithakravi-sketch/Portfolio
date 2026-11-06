@@ -337,20 +337,6 @@ function ln_about_text() {
 	);
 }
 
-/* An About page still showing the original placeholder paragraphs gets the written text. */
-add_filter(
-	'render_block_core/paragraph',
-	function ( $html ) {
-		if ( false !== strpos( $html, '[Write a few warm sentences about yourself' ) ) {
-			return do_blocks( ln_p( ln_about_text()['lede'], 'ln-lede' ) );
-		}
-		if ( false !== strpos( $html, '[A second paragraph: your tools and process' ) ) {
-			return do_blocks( implode( '', array_map( 'ln_p', ln_about_text()['more'] ) ) );
-		}
-		return $html;
-	}
-);
-
 function ln_page_about() {
 	$intro = ln_section(
 		ln_columns(
@@ -360,12 +346,11 @@ function ln_page_about() {
 					ln_p( 'About', 'ln-kicker' )
 					. ln_heading( 'Hello, I’m <em class="ln-accent">Namitha</em>', 1 )
 					. ln_p( ln_about_text()['lede'], 'ln-lede' )
-					. implode( '', array_map( 'ln_p', ln_about_text()['more'] ) )
-					. ln_buttons( array( array( 'View works', '/work/' ), array( 'Get in touch', '/contact/', true ) ) ),
+					. implode( '', array_map( 'ln_p', ln_about_text()['more'] ) ),
 					'60%',
 				),
 			),
-			'',
+			'ln-about-intro',
 			'center'
 		)
 	);
@@ -374,7 +359,14 @@ function ln_page_about() {
 		return ln_group( ln_heading( $title, 3 ) . ln_p( $text ), 'ln-step' );
 	};
 	$what = ln_section(
-		ln_group( ln_p( 'What I do', 'ln-kicker' ) . ln_heading( 'Ways we can <em class="ln-accent">work together</em>' ), 'ln-section-head' )
+		ln_columns(
+			array(
+				ln_p( 'What I do', 'ln-kicker' ) . ln_heading( 'Ways we can <em class="ln-accent">work together</em>' ),
+				ln_buttons( array( array( 'View works', '/work/', true ), array( 'Get in touch', '/contact/', true ) ), 'ln-head-actions' ),
+			),
+			'ln-section-head',
+			'bottom'
+		)
 		. ln_columns(
 			array(
 				$card( 'Illustration', 'Editorial pieces, book covers, packaging art and personal commissions.' ),
@@ -392,20 +384,28 @@ function ln_page_about() {
 }
 
 /*
- * About page: the old "As seen in print" band (heading plus two buttons) shows
- * the "Featured in" magazine covers instead. Only the untouched original band
- * is swapped, so an edited About page is otherwise left exactly as it is.
+ * One-time update of an About page made by an earlier version of the theme
+ * that still holds its original placeholder text (so nothing written by hand
+ * is lost): it gets the current layout and text. The previous version stays
+ * in the page's Revisions.
  */
-add_filter(
-	'render_block_core/group',
-	function ( $html, $block ) {
-		if ( false === strpos( $block['attrs']['className'] ?? '', 'ln-section' )
-			|| false === strpos( $html, 'in print</em>' )
-			|| false === strpos( $html, 'See the features' ) ) {
-			return $html;
+add_action(
+	'init',
+	function () {
+		if ( get_option( 'ln_about_v2' ) ) {
+			return;
 		}
-		return do_blocks( ln_features_section( false ) );
+		update_option( 'ln_about_v2', 1, false );
+		$page = get_page_by_path( 'about', OBJECT, 'page' );
+		if ( ! $page || false === strpos( $page->post_content, '[Write a few warm sentences about yourself' ) ) {
+			return;
+		}
+		$content = ln_page_about();
+		wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( $content ) ) );
+		if ( function_exists( 'ln_store_hash' ) ) {
+			ln_store_hash( $page->ID );
+		}
+		update_post_meta( $page->ID, '_ln_source', md5( $content ) );
 	},
-	10,
-	2
+	30
 );
