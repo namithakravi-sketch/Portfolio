@@ -137,32 +137,25 @@ function ln_page_work() {
 	$head = function ( $title, $text ) {
 		return ln_columns( array( ln_heading( $title ), ln_p( $text, 'ln-lede' ) ), 'ln-section-head', 'bottom' );
 	};
+	// Each tab shows 18 works, 3 to a row (6 rows). The placeholder images repeat until replaced.
+	$works = function ( array $images, $alt, $caption ) {
+		$items = array();
+		for ( $i = 0; $i < 18; $i++ ) {
+			$items[] = array( $images[ $i % count( $images ) ], $alt, $caption );
+		}
+		return ln_gallery( $items, 3 );
+	};
 
 	$artworks = ln_section(
 		$head( 'Artworks', 'Personal series, editorial pieces, book covers and everything in between.' )
-		. ln_gallery(
-			array(
-				array( 'illustration-1.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
-				array( 'illustration-2.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
-				array( 'illustration-3.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
-				array( 'illustration-4.jpg', '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
-			),
-			2
-		),
+		. $works( array( 'illustration-1.jpg', 'illustration-2.jpg', 'illustration-3.jpg', 'illustration-4.jpg' ), '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
 		'ln-project ln-tab-panel ln-band--cream',
 		'artworks'
 	);
 
 	$animation = ln_section(
 		$head( 'Animation', 'Looping moments and little moving stories.' )
-		. ln_gallery(
-			array(
-				array( 'animation-1.jpg', '[Describe this animation still]', '[Film title] · [Client]' ),
-				array( 'animation-2.jpg', '[Describe this animation still]', '[Film title] · [Client]' ),
-				array( 'animation-3.jpg', '[Describe this animation still]', '[Film title] · [Client]' ),
-			),
-			3
-		)
+		. $works( array( 'animation-1.jpg', 'animation-2.jpg', 'animation-3.jpg' ), '[Describe this animation still]', '[Film title] · [Client]' )
 		. ln_p( 'To show a film here, paste its YouTube or Vimeo link on its own line in the editor and it becomes a video player.', 'ln-note' ),
 		'ln-project ln-tab-panel ln-band--cream',
 		'animation'
@@ -183,13 +176,7 @@ function ln_page_work() {
 			'',
 			'center'
 		)
-		. ln_gallery(
-			array(
-				array( 'branding-2.jpg', '[Describe this branding image]', '' ),
-				array( 'branding-3.jpg', '[Describe this branding image]', '' ),
-			),
-			2
-		),
+		. $works( array( 'branding-2.jpg', 'branding-3.jpg', 'branding-1.jpg' ), '[Describe this branding image]', '[Brand name] · [Logo, illustration, packaging]' ),
 		'ln-project ln-tab-panel ln-band--cream',
 		'branding'
 	);
