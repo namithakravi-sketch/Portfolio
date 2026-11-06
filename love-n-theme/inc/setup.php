@@ -232,3 +232,113 @@ function ln_setup_shop() {
 		$product->save();
 	}
 }
+
+/**
+ * One-time fix (1.14.2) for a Work page already edited in WordPress.
+ * In each tab (Artworks, Animation, Branding): galleries that sit next to each
+ * other are merged into one, it is set to 3 columns, and placeholder tiles are
+ * added until it holds 18 works (6 rows of 3). Real images are kept, in order.
+ * Runs once; the previous version stays in the page's Revisions.
+ */
+add_action( 'init', 'ln_fill_work_galleries', 100 );
+
+function ln_fill_work_galleries() {
+	if ( wp_installing() || get_option( 'ln_work_galleries_done' ) || ! add_option( 'ln_work_galleries_lock', time(), '', false ) ) {
+		return;
+	}
+	$page = get_page_by_path( 'work', OBJECT, 'page' );
+	if ( $page ) {
+		$placeholders = array(
+			'artworks'  => array( array( 'illustration-1.jpg', 'illustration-2.jpg', 'illustration-3.jpg', 'illustration-4.jpg' ), '[Describe this artwork]', '[Artwork title] · [Client or personal]' ),
+			'animation' => array( array( 'animation-1.jpg', 'animation-2.jpg', 'animation-3.jpg' ), '[Describe this animation still]', '[Film title] · [Client]' ),
+			'branding'  => array( array( 'branding-2.jpg', 'branding-3.jpg', 'branding-1.jpg' ), '[Describe this branding image]', '[Brand name] · [Logo, illustration, packaging]' ),
+		);
+		$blocks  = parse_blocks( $page->post_content );
+		$changed = false;
+		foreach ( $blocks as &$section ) {
+			$tab = $section['attrs']['anchor'] ?? '';
+			if ( 'core/group' === $section['blockName'] && isset( $placeholders[ $tab ] ) ) {
+				$changed = ln_fill_tab_gallery( $section, $placeholders[ $tab ], 18 ) || $changed;
+			}
+		}
+		unset( $section );
+		if ( $changed ) {
+			$kses = has_filter( 'content_save_pre', 'wp_filter_post_kses' );
+			if ( $kses ) {
+				kses_remove_filters();
+			}
+			wp_update_post( array( 'ID' => $page->ID, 'post_content' => wp_slash( serialize_blocks( $blocks ) ) ) );
+			if ( $kses ) {
+				kses_init_filters();
+			}
+		}
+	}
+	update_option( 'ln_work_galleries_done', LOVE_N_VERSION, false );
+	delete_option( 'ln_work_galleries_lock' );
+}
+
+/** Rebuild a block's markup slots: its own opening and closing HTML, one slot per inner block. */
+function ln_rebuild_inner_content( array &$block, $open ) {
+	$close = end( $block['innerContent'] );
+	$inner = array( $open );
+	foreach ( array_keys( $block['innerBlocks'] ) as $i ) {
+		if ( $i ) {
+			$inner[] = "\n\n";
+		}
+		$inner[] = null;
+	}
+	$inner[]               = $close;
+	$block['innerContent'] = $inner;
+}
+
+/**
+ * In one tab section: merge neighbouring galleries into the first, set it to
+ * 3 columns and pad it with placeholder images up to $total. Returns true if
+ * anything changed. A tab with no gallery is left alone.
+ */
+function ln_fill_tab_gallery( array &$section, array $ph, $total ) {
+	$kept    = array();
+	$merged  = false;
+	foreach ( $section['innerBlocks'] as $block ) {
+		$last = count( $kept ) - 1;
+		if ( 'core/gallery' === $block['blockName'] && $last >= 0 && 'core/gallery' === $kept[ $last ]['blockName'] ) {
+			$kept[ $last ]['innerBlocks'] = array_merge( $kept[ $last ]['innerBlocks'], $block['innerBlocks'] );
+			$merged                       = true;
+			continue;
+		}
+		$kept[] = $block;
+	}
+
+	$changed = $merged;
+	foreach ( $kept as &$block ) {
+		if ( 'core/gallery' !== $block['blockName'] ) {
+			continue;
+		}
+		$n = count( $block['innerBlocks'] );
+		for ( $i = $n; $i < $total; $i++ ) {
+			$file   = $ph[0][ ( $i - $n ) % count( $ph[0] ) ];
+			$parsed = parse_blocks( ln_image( $file, $ph[1], '', $ph[2], true ) );
+			foreach ( $parsed as $img ) {
+				if ( 'core/image' === $img['blockName'] ) {
+					$block['innerBlocks'][] = $img;
+				}
+			}
+		}
+		$cols = (int) ( $block['attrs']['columns'] ?? 0 );
+		if ( $merged || $n < $total || 3 !== $cols ) {
+			$block['attrs']['columns'] = 3;
+			ln_rebuild_inner_content( $block, preg_replace( '/\bcolumns-\d+\b/', 'columns-3', $block['innerContent'][0] ) );
+			$changed = true;
+		}
+		break; // only the first gallery in a tab
+	}
+	unset( $block );
+
+	if ( $merged ) {
+		$section['innerBlocks'] = $kept;
+		ln_rebuild_inner_content( $section, $section['innerContent'][0] );
+	} elseif ( $changed ) {
+		$section['innerBlocks'] = $kept;
+	}
+	return $changed;
+}
