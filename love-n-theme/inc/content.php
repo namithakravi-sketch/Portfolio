@@ -325,6 +325,32 @@ function ln_page_policy( $title ) {
 	);
 }
 
+/** About page text (also fills in the placeholders on an About page made before it was written). */
+function ln_about_text() {
+	return array(
+		'lede' => 'I’m an illustrator and designer from Kerala, and most of what I draw starts right around me: the colours of our festivals and art forms, monsoon greens, and the little everyday moments I never want to forget.',
+		'more' => array(
+			'My love for art began in school, the day I started training in watercolours, and I’ve been chasing colour ever since. I studied design at the National Institute of Design, the National Institute of Fashion Technology and Heriot-Watt University, and taught myself digital art and animation along the way. These days I draw in Procreate and bring things to life in Procreate Dreams, but I still sneak back to acrylics and watercolours every now and then.',
+			'Love, N began because I wanted my artworks to leave the screen and become things you can hold, keep and give. I’ve always sent postcards to friends whenever I travel, and that little habit grew into the Love, N Art Mail Club: an envelope of happy mail, every month.',
+			'I work from my studio with my guinea pigs for company (and the occasional supervision). Whether it’s a print on your wall or an envelope in your letterbox, I hope it makes you happy.',
+		),
+	);
+}
+
+/* An About page still showing the original placeholder paragraphs gets the written text. */
+add_filter(
+	'render_block_core/paragraph',
+	function ( $html ) {
+		if ( false !== strpos( $html, '[Write a few warm sentences about yourself' ) ) {
+			return do_blocks( ln_p( ln_about_text()['lede'], 'ln-lede' ) );
+		}
+		if ( false !== strpos( $html, '[A second paragraph: your tools and process' ) ) {
+			return do_blocks( implode( '', array_map( 'ln_p', ln_about_text()['more'] ) ) );
+		}
+		return $html;
+	}
+);
+
 function ln_page_about() {
 	$intro = ln_section(
 		ln_columns(
@@ -333,8 +359,8 @@ function ln_page_about() {
 				array(
 					ln_p( 'About', 'ln-kicker' )
 					. ln_heading( 'Hello, I’m <em class="ln-accent">Namitha</em>', 1 )
-					. ln_p( '[Write a few warm sentences about yourself: where you draw from, what you love to make, and how Love, N began.]', 'ln-lede' )
-					. ln_p( '[A second paragraph: your tools and process, the feelings and memories your work returns to, and what you hope people feel when they hold one of your pieces.]' )
+					. ln_p( ln_about_text()['lede'], 'ln-lede' )
+					. implode( '', array_map( 'ln_p', ln_about_text()['more'] ) )
 					. ln_buttons( array( array( 'View works', '/work/' ), array( 'Get in touch', '/contact/', true ) ) ),
 					'60%',
 				),
