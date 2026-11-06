@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.14.0
+Version: 1.14.1
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -339,6 +339,14 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 .ln-tab-panel.is-active { animation: ln-fade-in 0.35s ease both; }
 @keyframes ln-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .ln-tab-panel:focus { outline: none; }
+/* Work page: every gallery in a tab shows 3 works to a row, whatever its column setting in the editor.
+   A short last row keeps the same tile size instead of stretching. */
+@media (min-width: 600px) {
+	.ln-tab-panel .wp-block-gallery.has-nested-images figure.wp-block-image:not(#individual-image) {
+		width: calc((100% - var(--wp--style--unstable-gallery-gap, 16px) * 2) / 3) !important;
+		flex-grow: 0 !important;
+	}
+}
 /* Section descriptions sit flush with the right edge of the images below. */
 @media (min-width: 782px) {
 	.ln-tab-panel .ln-section-head > .wp-block-column:first-child { flex: 0 0 30% !important; }
