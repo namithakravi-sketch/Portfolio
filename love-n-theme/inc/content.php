@@ -44,10 +44,10 @@ function ln_page_home() {
 	$shop = ln_section(
 		ln_group( ln_p( 'The Love, N shop', 'ln-kicker' ) . ln_heading( 'New in' ), 'ln-section-head' )
 		. ln_group(
-			ln_photo_card( 'shop-prints.jpg', 'Love, N art prints', 'Artworks &amp; prints', '/product-category/prints/', 'ln-tile ln-tile--big' )
-			. ln_photo_card( 'shop-postcards.jpg', 'Love, N postcards', 'Postcards', '/product-category/postcards/', 'ln-tile' )
-			. ln_photo_card( 'shop-bookmarks.jpg', 'Love, N bookmarks', 'Bookmarks', '/product-category/bookmarks/', 'ln-tile' )
-			. ln_photo_card( 'shop-stickers.jpg', 'Love, N stickers', 'Stickers', '/product-category/stickers/', 'ln-tile' ),
+			ln_photo_card( 'shop-prints.jpg', 'Love, N art prints', 'Artworks &amp; prints', '/shop/#prints', 'ln-tile ln-tile--big' )
+			. ln_photo_card( 'shop-postcards.jpg', 'Love, N postcards', 'Postcards', '/shop/#postcards', 'ln-tile' )
+			. ln_photo_card( 'shop-bookmarks.jpg', 'Love, N bookmarks', 'Bookmarks', '/shop/#bookmarks', 'ln-tile' )
+			. ln_photo_card( 'shop-stickers.jpg', 'Love, N stickers', 'Stickers', '/shop/#stickers', 'ln-tile' ),
 			'ln-grid'
 		)
 		. ln_group( ln_buttons( array( array( 'Shop now', '/shop/', true ) ) ), 'ln-center' )

@@ -7,11 +7,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOVE_N_VERSION', '1.8.0' );
+define( 'LOVE_N_VERSION', '1.9.0' );
 
 require_once get_theme_file_path( 'inc/blocks.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
 require_once get_theme_file_path( 'inc/cart.php' );
+require_once get_theme_file_path( 'inc/shop.php' );
 require_once get_theme_file_path( 'inc/content.php' );
 require_once get_theme_file_path( 'inc/setup.php' );
 

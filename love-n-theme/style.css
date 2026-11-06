@@ -6,7 +6,7 @@ Description: A warm, nostalgic portfolio and shop theme for Namitha Raveendranat
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Version: 1.8.0
+Version: 1.9.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: love-n
@@ -422,7 +422,7 @@ header.wp-block-template-part .ln-header { transition: box-shadow 0.25s ease; }
 	transform: rotate(-0.6deg);
 }
 .ln-letter p { margin: 0 0 1em; }
-.ln-letter__dear { font-family: var(--wp--preset--font-family--accent); font-style: italic; font-size: 1.6rem; line-height: 1.2; margin-bottom: 0.6em !important; }
+.ln-letter__dear { font-size: 1.15rem; line-height: 1.3; margin-bottom: 0.6em !important; } /* same font as the letter text */
 .ln-letter__sign { text-align: right; margin: 0.6em 0 0 !important; }
 .ln-letter__sign img { width: min(220px, 60%); height: auto; display: inline-block; }
 .ln-letter__stamp {

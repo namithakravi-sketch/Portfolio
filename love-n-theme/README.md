@@ -29,3 +29,6 @@ Messages and sign-ups are emailed to the site admin and also saved under **Love,
 ## Cart drawer and local prices
 - The header cart icon opens a cart drawer built by the theme (`inc/cart.php`, `assets/js/cart-drawer.js`). It uses the WooCommerce Store API, so it works while the store is in "coming soon" mode (WooCommerce's own mini-cart block is hidden in that mode).
 - On the Mail Club page, International plans also show an approximate price in the visitor's currency (guessed from their device's time zone; they can change it). Payment is still in INR. Rates come from open.er-api.com (fallback: frankfurter.app), refreshed every 12 hours. If neither can be reached and no earlier rates are saved, the approximate line is simply not shown.
+
+## Shop page
+The Shop page uses the Work page layout: a "Shop all" tab plus one tab per product category (Artworks & prints, Postcards, Bookmarks, Stickers, then any new category once it has products), all on one page. The layout comes from `templates/archive-product.html` and the `[ln_shop]` shortcode (`inc/shop.php`). Category links like `/product-category/postcards/` open the matching tab (`/shop/#postcards`); the Art Mail Club category goes to the Mail Club page.
